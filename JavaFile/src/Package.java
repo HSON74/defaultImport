@@ -1,23 +1,24 @@
 
-/**/
+/*Provides the classes necessary to create an applet and the classes an applet uses to communicate with its applet context.*/
 import java.applet.*;
-/**/
+/*Contains all of the classes for creating user interfaces and for painting graphics and images.*/
 import java.awt.*;
-/**/
+/*Provides classes for color spaces.*/
 import java.awt.color.*;
-/**/
+/*Provides interfaces and classes for transferring data between and within applications.*/
 import java.awt.datatransfer.*;
-/**/
+/*desktop*/
 import java.awt.desktop.*;
-/**/
+/*Drag and Drop is a direct manipulation gesture found in many Graphical User Interface systems that provides
+a mechanism to transfer information between two entities logically associated with presentation elements in the GUI.*/
 import java.awt.dnd.*;
-/**/
+/*Provides interfaces and classes for dealing with different types of events fired by AWT components.*/
 import java.awt.event.*;
-/**/
+/*Provides classes and interface relating to fonts.*/
 import java.awt.font.*;
 /**/
 import java.awt.geom.*;
-/**/
+/*Provides classes and interfaces for the input method framework.*/
 import java.awt.im.*;
 /**/
 import java.awt.im.spi.*;
@@ -71,13 +72,16 @@ import java.nio.file.attribute.*;
 import java.nio.file.spi.*;
 /*Provides the RMI package.*/
 import java.rmi.*;
-/* */
-import java.rmi.activation.*; //Provides support for RMI Object Activation.
-/* */
-import java.rmi.dgc.*; //Provides classes and interface for RMI distributed garbage-collection (DGC).
-import java.rmi.registry.*; //Provides a class and two interfaces for the RMI registry.
-import java.rmi.server.*; //Provides classes and interfaces for supporting the server side of RMI.
-import java.security.*; //Provides the classes and interfaces for the security framework.
+/*Provides support for RMI Object Activation.*/
+import java.rmi.activation.*;
+/*Provides classes and interface for RMI distributed garbage-collection (DGC).*/
+import java.rmi.dgc.*;
+/*Provides a class and two interfaces for the RMI registry.*/
+import java.rmi.registry.*;
+/*Provides classes and interfaces for supporting the server side of RMI.*/
+import java.rmi.server.*;
+/*Provides the classes and interfaces for the security framework.*/
+import java.security.*;
 /*The classes and interfaces in this package have been superseded by classes in the java.security package.*/
 import java.security.acl.*;
 /*Provides classes and interfaces for parsing and managing certificates, certificate revocation lists (CRLs), and certification paths.*/
@@ -85,228 +89,217 @@ import java.security.cert.*;
 /*Provides interfaces for generating RSA (Rivest, Shamir and Adleman AsymmetricCipher algorithm) keys as defined 
 in the RSA Laboratory Technical Note PKCS#1, and DSA (Digital Signature Algorithm) keys as defined in NIST's FIPS-186.*/
 import java.security.interfaces.*;
+/*Provides classes and interfaces for key specifications and algorithm parameter specifications.*/
+import java.security.spec.*;
+/*Provides the API for accessing and processing data stored in a data source (usually a relational database) 
+using the JavaTM programming language.*/
+import java.sql.*;
+/*Provides classes and interfaces for handling text,dates,numbers,and messages in a manner independent of natural languages.*/
+import java.text.*;
+/*Service provider classes for the classes in the java.text package.*/
+import java.text.spi.*;
+/*The main API for dates, times, instants, and durations.*/
+import java.time.*;
+/*Generic API for calendar systems other than the default ISO.*/
+import java.time.chrono.*;
+/*Provides classes to print and parse dates and times.*/
+import java.time.format.*;
+/*Access to date and time using fields and units, and date time adjusters.*/
+import java.time.temporal.*;
+/*Support for time-zones and their rules.java.util Contains the collections framework,
+legacy collection classes,event model,date and time facilities,internationalization, and 
+miscellaneous utility classes(a string tokenizer,a random-number generator,and a bit array).java.util.concurrent 
+Utility classes commonly useful in concurrent programming.java.util.concurrent.atomic A small toolkit of classes that 
+support lock-free thread-safe programming on single variables.java.util.concurrent.locks Interfaces and classes providing a 
+framework for locking and waiting for conditions that is distinct from built-in synchronization and monitors.*/
+import java.time.zone.*;
+/*Functional interfaces provide target types for lambda expressions and method references.*/
+import java.util.function.*;
+/*Provides classes for reading and writing the JAR (Java ARchive) file format, which is based on the standard ZIP file 
+format with an optional manifest file.*/
+import java.util.jar.*;
+/*Provides the classes and interfaces of the JavaTM 2 platform's core logging facilities.*/
+import java.util.logging.*;
+/*This package allows applications to store and retrieve user and system preference and configuration data.*/
+import java.util.prefs.*;
+/*Classes for matching character sequences against patterns specified by regular expressions.*/
+import java.util.regex.*;
+/*Service provider classes for the classes in the java.util package.*/
+import java.util.spi.*;
+/*Classes to support functional-style operations on streams of elements, such as map-reduce transformations on collections.*/
+import java.util.stream.*;
+/*Provides classes for reading and writing the standard ZIP and GZIP file formats.*/
+import java.util.zip.*;
+/*Defines a contract between user-interface components and an assistive technology that provides access to those components.*/
+import javax.accessibility.*;
+/*Provides classes and interfaces for key specifications and algorithm parameter specifications.*/
+import javax.crypto.spec.*;
+/*The main package of the Java Image I/O API.*/
+import javax.imageio.*;
+/*A package of the Java Image I/O API dealing with synchronous notification of events during the reading and writing of images.*/
+import javax.imageio.event.*;
+/*A package of the Java Image I/O API dealing with reading and writing metadata.*/
+import javax.imageio.metadata.*;
+/*Package containing the public classes used by the built-in BMP plug-in.*/
+import javax.imageio.plugins.bmp.*;
+/*Classes supporting the built-in JPEG plug-in.*/
+import javax.imageio.plugins.jpeg.*;
+/*A package of the Java Image I/O API containing 
+the plug-in interfaces for readers, writers, transcoders, 
+and streams, and a runtime registry.*/
+import javax.imageio.spi.*;
+/*A package of the Java Image I/O API dealing with low-level I/O from files and streams.*/
+import javax.imageio.stream.*;
+/*Classes and hierarchies of packages used to model the Java programming language.*/
+import javax.lang.model.*;
+/*Interfaces used to model elements of the Java programming language.*/
+import javax.lang.model.element.*;
+/*Interfaces used to model Java programming language types.*/
+import javax.lang.model.type.*;
+/*Utilities to assist in the processing of program elements and types.*/
+import javax.lang.model.util.*;
 
-/*java.security.spec	
-Provides classes and interfaces for key specifications and algorithm parameter specifications.
-java.sql	
-Provides the API for accessing and processing data stored in a data source (usually a relational database) using the JavaTM programming language.
-java.text	
-Provides classes and interfaces for handling text, dates, numbers, and messages in a manner independent of natural languages.
-java.text.spi	
-Service provider classes for the classes in the java.text package.
-java.time	
-The main API for dates, times, instants, and durations.
-java.time.chrono	
-Generic API for calendar systems other than the default ISO.
-java.time.format	
-Provides classes to print and parse dates and times.
-java.time.temporal	
-Access to date and time using fields and units, and date time adjusters.
-java.time.zone	
-Support for time-zones and their rules.
-java.util	
-Contains the collections framework, legacy collection classes, event model, date and time facilities, internationalization, and miscellaneous utility classes (a string tokenizer, a random-number generator, and a bit array).
-java.util.concurrent	
-Utility classes commonly useful in concurrent programming.
-java.util.concurrent.atomic	
-A small toolkit of classes that support lock-free thread-safe programming on single variables.
-java.util.concurrent.locks	
-Interfaces and classes providing a framework for locking and waiting for conditions that is distinct from built-in synchronization and monitors.
-java.util.function	
-Functional interfaces provide target types for lambda expressions and method references.
-java.util.jar	
-Provides classes for reading and writing the JAR (Java ARchive) file format, which is based on the standard ZIP file format with an optional manifest file.
-java.util.logging	
-Provides the classes and interfaces of the JavaTM 2 platform's core logging facilities.
-java.util.prefs	
-This package allows applications to store and retrieve user and system preference and configuration data.
-java.util.regex	
-Classes for matching character sequences against patterns specified by regular expressions.
-java.util.spi	
-Service provider classes for the classes in the java.util package.
-java.util.stream	
-Classes to support functional-style operations on streams of elements, such as map-reduce transformations on collections.
-java.util.zip	
-Provides classes for reading and writing the standard ZIP and GZIP file formats.
-javax.accessibility	
-Defines a contract between user-interface components and an assistive technology that provides access to those components.
-javax.activation	 
-javax.activity	
-Contains Activity service related exceptions thrown by the ORB machinery during unmarshalling.
-javax.annotation	 
-javax.annotation.processing	
-Facilities for declaring annotation processors and for allowing annotation processors to communicate with an annotation processing tool environment.
-javax.crypto	
-Provides the classes and interfaces for cryptographic operations.
-javax.crypto.interfaces	
-Provides interfaces for Diffie-Hellman keys as defined in RSA Laboratories' PKCS #3.
-javax.crypto.spec	
-Provides classes and interfaces for key specifications and algorithm parameter specifications.
-javax.imageio	
-The main package of the Java Image I/O API.
-javax.imageio.event	
-A package of the Java Image I/O API dealing with synchronous notification of events during the reading and writing of images.
-javax.imageio.metadata	
-A package of the Java Image I/O API dealing with reading and writing metadata.
-javax.imageio.plugins.bmp	
-Package containing the public classes used by the built-in BMP plug-in.
-javax.imageio.plugins.jpeg	
-Classes supporting the built-in JPEG plug-in.
-javax.imageio.spi	
-A package of the Java Image I/O API containing the plug-in interfaces for readers, writers, transcoders, and streams, and a runtime registry.
-javax.imageio.stream	
-A package of the Java Image I/O API dealing with low-level I/O from files and streams.
-javax.jws	 
-javax.jws.soap	 
-javax.lang.model	
-Classes and hierarchies of packages used to model the Java programming language.
-javax.lang.model.element	
-Interfaces used to model elements of the Java programming language.
-javax.lang.model.type	
-Interfaces used to model Java programming language types.
-javax.lang.model.util	
-Utilities to assist in the processing of program elements and types.
-javax.management	
+/*import javax.management	
 Provides the core classes for the Java Management Extensions.
-javax.management.loading	
+import javax.management.loading	
 Provides the classes which implement advanced dynamic loading.
-javax.management.modelmbean	
+import javax.management.modelmbean	
 Provides the definition of the ModelMBean classes.
-javax.management.monitor	
+import javax.management.monitor	
 Provides the definition of the monitor classes.
-javax.management.openmbean	
+import javax.management.openmbean	
 Provides the open data types and Open MBean descriptor classes.
-javax.management.relation	
+import javax.management.relation	
 Provides the definition of the Relation Service.
-javax.management.remote	
+import javax.management.remote	
 Interfaces for remote access to JMX MBean servers.
-javax.management.remote.rmi	
+import javax.management.remote.rmi	
 The RMI connector is a connector for the JMX Remote API that uses RMI to transmit client requests to a remote MBean server.
-javax.management.timer	
+import javax.management.timer	
 Provides the definition of the Timer MBean.
-javax.naming	
+import javax.naming	
 Provides the classes and interfaces for accessing naming services.
-javax.naming.directory	
+import javax.naming.directory	
 Extends the javax.naming package to provide functionality for accessing directory services.
-javax.naming.event	
+import javax.naming.event	
 Provides support for event notification when accessing naming and directory services.
-javax.naming.ldap	
+import javax.naming.ldap	
 Provides support for LDAPv3 extended operations and controls.
-javax.naming.spi	 
-javax.net	
+import javax.naming.spi	 
+import javax.net	
 Provides classes for networking applications.
-javax.net.ssl	
+import javax.net.ssl	
 Provides classes for the secure socket package.
-javax.print	
+import javax.print	
 Provides the principal classes and interfaces for the JavaTM Print Service API.
-javax.print.attribute	
+import javax.print.attribute	
 Provides classes and interfaces that describe the types of JavaTM Print Service attributes and how they can be collected into attribute sets.
-javax.print.attribute.standard	
+import javax.print.attribute.standard	
 Package javax.print.attribute.standard contains classes for specific printing attributes.
-javax.print.event	
+import javax.print.event	
 Package javax.print.event contains event classes and listener interfaces.
-javax.rmi	
+import javax.rmi	
 Contains user APIs for RMI-IIOP.
-javax.rmi.CORBA	
+import javax.rmi.CORBA	
 Contains portability APIs for RMI-IIOP.
-javax.rmi.ssl	
+import javax.rmi.ssl	
 Provides implementations of RMIClientSocketFactory and RMIServerSocketFactory over the Secure Sockets Layer (SSL) or Transport Layer Security (TLS) protocols.
-javax.script	
+import javax.script	
 The scripting API consists of interfaces and classes that define Java TM Scripting Engines and provides a framework for their use in Java applications.
-javax.security.auth	
+import javax.security.auth	
 This package provides a framework for authentication and authorization.
-javax.security.auth.callback	
+import javax.security.auth.callback	
 This package provides the classes necessary for services to interact with applications in order to retrieve information (authentication data including usernames or passwords, for example) or to display information (error and warning messages, for example).
-javax.security.auth.kerberos	
+import javax.security.auth.kerberos	
 This package contains utility classes related to the Kerberos network authentication protocol.
-javax.security.auth.login	
+import javax.security.auth.login	
 This package provides a pluggable authentication framework.
-javax.security.auth.spi	
+import javax.security.auth.spi	
 This package provides the interface to be used for implementing pluggable authentication modules.
-javax.security.auth.x500	
+import javax.security.auth.x500	
 This package contains the classes that should be used to store X500 Principal and X500 Private Credentials in a Subject.
-javax.security.cert	
+import javax.security.cert	
 Provides classes for public key certificates.
-javax.security.sasl	
+import javax.security.sasl	
 Contains class and interfaces for supporting SASL.
-javax.sound.midi	
+import javax.sound.midi	
 Provides interfaces and classes for I/O, sequencing, and synthesis of MIDI (Musical Instrument Digital Interface) data.
-javax.sound.midi.spi	
+import javax.sound.midi.spi	
 Supplies interfaces for service providers to implement when offering new MIDI devices, MIDI file readers and writers, or sound bank readers.
-javax.sound.sampled	
+import javax.sound.sampled	
 Provides interfaces and classes for capture, processing, and playback of sampled audio data.
-javax.sound.sampled.spi	
+import javax.sound.sampled.spi	
 Supplies abstract classes for service providers to subclass when offering new audio devices, sound file readers and writers, or audio format converters.
-javax.sql	
+import javax.sql	
 Provides the API for server side data source access and processing from the JavaTM programming language.
-javax.sql.rowset	
+import javax.sql.rowset	
 Standard interfaces and base classes for JDBC RowSet implementations.
-javax.sql.rowset.serial	
+import javax.sql.rowset.serial	
 Provides utility classes to allow serializable mappings between SQL types and data types in the Java programming language.
-javax.sql.rowset.spi	
+import javax.sql.rowset.spi	
 The standard classes and interfaces that a third party vendor has to use in its implementation of a synchronization provider.
-javax.swing	
+import javax.swing	
 Provides a set of "lightweight" (all-Java language) components that, to the maximum degree possible, work the same on all platforms.
-javax.swing.border	
+import javax.swing.border	
 Provides classes and interface for drawing specialized borders around a Swing component.
-javax.swing.colorchooser	
+import javax.swing.colorchooser	
 Contains classes and interfaces used by the JColorChooser component.
-javax.swing.event	
+import javax.swing.event	
 Provides for events fired by Swing components.
-javax.swing.filechooser	
+import javax.swing.filechooser	
 Contains classes and interfaces used by the JFileChooser component.
-javax.swing.plaf	
+import javax.swing.plaf	
 Provides one interface and many abstract classes that Swing uses to provide its pluggable look-and-feel capabilities.
-javax.swing.plaf.basic	
+import javax.swing.plaf.basic	
 Provides user interface objects built according to the Basic look and feel.
-javax.swing.plaf.metal	
+import javax.swing.plaf.metal	
 Provides user interface objects built according to the Java look and feel (once codenamed Metal), which is the default look and feel.
-javax.swing.plaf.multi	
+import javax.swing.plaf.multi	
 Provides user interface objects that combine two or more look and feels.
-javax.swing.plaf.nimbus	
+import javax.swing.plaf.nimbus	
 Provides user interface objects built according to the cross-platform Nimbus look and feel.
-javax.swing.plaf.synth	
+import javax.swing.plaf.synth	
 Synth is a skinnable look and feel in which all painting is delegated.
-javax.swing.table	
+import javax.swing.table	
 Provides classes and interfaces for dealing with javax.swing.JTable.
-javax.swing.text	
+import javax.swing.text	
 Provides classes and interfaces that deal with editable and noneditable text components.
-javax.swing.text.html	
+import javax.swing.text.html	
 Provides the class HTMLEditorKit and supporting classes for creating HTML text editors.
-javax.swing.text.html.parser	
+import javax.swing.text.html.parser	
 Provides the default HTML parser, along with support classes.
-javax.swing.text.rtf	
+import javax.swing.text.rtf	
 Provides a class (RTFEditorKit) for creating Rich-Text-Format text editors.
-javax.swing.tree	
+import javax.swing.tree	
 Provides classes and interfaces for dealing with javax.swing.JTree.
-javax.swing.undo	
+import javax.swing.undo	
 Allows developers to provide support for undo/redo in applications such as text editors.
-javax.tools	
+import javax.tools	
 Provides interfaces for tools which can be invoked from a program, for example, compilers.
-javax.transaction	
+import javax.transaction	
 Contains three exceptions thrown by the ORB machinery during unmarshalling.
-javax.transaction.xa	
+import javax.transaction.xa	
 Provides the API that defines the contract between the transaction manager and the resource manager, which allows the transaction manager to enlist and delist resource objects (supplied by the resource manager driver) in JTA transactions.
-javax.xml	 
-javax.xml.bind	
+import javax.xml	 
+import javax.xml.bind	
 Provides a runtime binding framework for client applications including unmarshalling, marshalling, and validation capabilities.
-javax.xml.bind.annotation	
+import javax.xml.bind.annotation	
 Defines annotations for customizing Java program elements to XML Schema mapping.
-javax.xml.bind.annotation.adapters	
+import javax.xml.bind.annotation.adapters	
 XmlAdapter and its spec-defined sub-classes to allow arbitrary Java classes to be used with JAXB.
-javax.xml.bind.attachment	
+import javax.xml.bind.attachment	
 This package is implemented by a MIME-based package processor that enables the interpretation and creation of optimized binary data within an MIME-based package format.
-javax.xml.bind.helpers	
+import javax.xml.bind.helpers	
 JAXB Provider Use Only: Provides partial default implementations for some of the javax.xml.bind interfaces.
-javax.xml.bind.util	
+import javax.xml.bind.util	
 Useful client utility classes.
-javax.xml.crypto	
+import javax.xml.crypto	
 Common classes for XML cryptography.
-javax.xml.crypto.dom	
+import javax.xml.crypto.dom	
 DOM-specific classes for the javax.xml.crypto package.
-javax.xml.crypto.dsig	
+import javax.xml.crypto.dsig	
 Classes for generating and validating XML digital signatures.
-javax.xml.crypto.dsig.dom	
+/*javax.xml.crypto.dsig.dom	
 DOM-specific classes for the javax.xml.crypto.dsig package.
 javax.xml.crypto.dsig.keyinfo	
 Classes for parsing and processing KeyInfo elements and structures.
@@ -406,19 +399,18 @@ Allows programmers to construct object implementations that are portable between
 org.omg.PortableServer.portable	
 Provides classes and interfaces for making the server side of your applications portable across multivendor ORBs.
 org.omg.PortableServer.ServantLocatorPackage	
-Provides classes and interfaces for locating the servant.
-org.omg.SendingContext	
-Provides support for the marshalling of value types.
-org.omg.stub.java.rmi	
-Contains RMI-IIOP Stubs for the Remote types that occur in the java.rmi package.
-org.w3c.dom	
-Provides the interfaces for the Document Object Model (DOM).
-org.w3c.dom.bootstrap	 
-org.w3c.dom.events	 
-org.w3c.dom.ls	 
-org.w3c.dom.views	 
-org.xml.sax	              //This package provides the core SAX APIs.
-import org.xml.sax.ext	 //This package contains interfaces to SAX2 facilities that conformant SAX drivers won't necessarily support.*/
+Provides classes and interfaces for locating the servant.*/
+/*Provides the interfaces for the Document Object Model (DOM).*/
+import org.w3c.dom.*;
+import org.w3c.dom.bootstrap.*;
+import org.w3c.dom.events.*;
+import org.w3c.dom.ls.*;
+import org.w3c.dom.views.*;
+/*This package provides the core SAX APIs.*/
+import org.xml.sax.*;
+/*This package contains interfaces to SAX2 facilities that conformant SAX drivers won't necessarily support.*/
+import org.xml.sax.ext.*;
+/*This package contains "helper" classes, including support for bootstrapping SAX-based applications.*/
 import org.xml.sax.helpers.*;
 
 public class Package {
