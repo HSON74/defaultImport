@@ -139,3 +139,7 @@
 [2023-12-05T06:18:02-0500] [ALPM] reinstalled make (4.4.1-1)
 [2023-12-05T06:18:02-0500] [ALPM] transaction completed
 [2023-12-05T06:18:02-0500] [ALPM] running 'texinfo-install.hook'...
+[2023-12-05T06:22:37-0500] [PACMAN] Running 'pacman -S libraries'
+[2023-12-05T06:23:13-0500] [ALPM] transaction started
+[2023-12-05T06:23:13-0500] [ALPM] installed apr (1.7.4-2)
+[2023-12-05T06:23:13-0500] [ALPM] transaction completed
