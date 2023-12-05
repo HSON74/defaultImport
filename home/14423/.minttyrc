@@ -1,0 +1,16 @@
+Locale=C
+Charset=UTF-8
+ForegroundColour=206,255,255
+CursorColour=0,0,255
+ThemeFile=
+Transparency=4
+Font=MS Gothic
+FontHeight=14
+FontWeight=700
+FontIsBold=yes
+CtrlShiftShortcuts=yes
+ClicksTargetApp=yes
+Columns=1000
+Rows=270
+ScrollbackLines=1000000000
+RewrapOnResize=yes
