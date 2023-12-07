@@ -36,6 +36,13 @@ public class FactoryMethod {
         p_switch[1] = s_2_bool;
     }
 
+    public static boolean m_fullAdder(boolean[] p_switch) {
+        if(p_switch.length < 3;){
+            return null;
+        }
+        return false;
+    }
+
     public static void testArray(boolean[] p_test_array) {
         for (int i = 0; i < p_test_array.length; i++) {
             p_test_array[i] = true;
