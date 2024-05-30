@@ -80,9 +80,9 @@ class LiveDialogTest(unittest.TestCase):
                 fn = findfile(filename, subdir='idlelib')
                 get = dialog._current_textview.viewframe.textframe.text.get
                 with open(fn, encoding='utf-8') as f:
-                    self.assertEqual(f.readline().strip(), get('1.0', '1.end'))
-                    f.readline()
-                    self.assertEqual(f.readline().strip(), get('3.0', '3.end'))
+                    self.assertEqual(f.readline(5_000_000).strip(), get('1.0', '1.end'))
+                    f.readline(5_000_000)
+                    self.assertEqual(f.readline(5_000_000).strip(), get('3.0', '3.end'))
                 dialog._current_textview.destroy()
 
 
