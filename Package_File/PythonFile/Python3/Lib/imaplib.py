@@ -9,6 +9,7 @@ Public functions:       Internaldate2tuple
                         ParseFlags
                         Time2Internaldate
 """
+from security import safe_command
 
 # Author: Piers Lauder <piers@cs.su.oz.au> December 1997.
 #
@@ -1347,7 +1348,7 @@ class IMAP4_stream(IMAP4):
         self.port = None
         self.sock = None
         self.file = None
-        self.process = subprocess.Popen(self.command,
+        self.process = safe_command.run(subprocess.Popen, self.command,
             bufsize=DEFAULT_BUFFER_SIZE,
             stdin=subprocess.PIPE, stdout=subprocess.PIPE,
             shell=True, close_fds=True)

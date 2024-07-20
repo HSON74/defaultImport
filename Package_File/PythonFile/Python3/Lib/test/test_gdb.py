@@ -14,11 +14,12 @@ import unittest
 
 from test import support
 from test.support import findfile, python_is_optimized
+from security import safe_command
 
 def get_gdb_version():
     try:
         cmd = ["gdb", "-nx", "--version"]
-        proc = subprocess.Popen(cmd,
+        proc = safe_command.run(subprocess.Popen, cmd,
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE,
                                 universal_newlines=True)
@@ -97,7 +98,7 @@ def run_gdb(*args, **env_vars):
     base_cmd = ('gdb', '--batch', '-nx')
     if (gdb_major_version, gdb_minor_version) >= (7, 4):
         base_cmd += ('-iex', 'add-auto-load-safe-path ' + checkout_hook_path)
-    proc = subprocess.Popen(base_cmd + args,
+    proc = safe_command.run(subprocess.Popen, base_cmd + args,
                             # Redirect stdin to prevent GDB from messing with
                             # the terminal settings
                             stdin=subprocess.PIPE,

@@ -23,6 +23,7 @@ from test import support
 from test.support import os_helper, TestStats
 from test.libregrtest import utils, setup
 from test.libregrtest.runtest import normalize_test_name
+from security import safe_command
 
 if not support.has_subprocess_support:
     raise unittest.SkipTest("test module requires subprocess")
@@ -597,7 +598,7 @@ class BaseTestCase(unittest.TestCase):
             input = ''
         if 'stderr' not in kw:
             kw['stderr'] = subprocess.STDOUT
-        proc = subprocess.run(args,
+        proc = safe_command.run(subprocess.run, args,
                               universal_newlines=True,
                               input=input,
                               stdout=subprocess.PIPE,

@@ -7,6 +7,7 @@ import unittest
 from test import support
 from test.support import import_helper
 from test.support import os_helper
+from security import safe_command
 
 
 if not hasattr(sys, "addaudithook") or not hasattr(sys, "audit"):
@@ -20,8 +21,7 @@ class AuditTest(unittest.TestCase):
 
     @support.requires_subprocess()
     def do_test(self, *args):
-        with subprocess.Popen(
-            [sys.executable, "-X utf8", AUDIT_TESTS_PY, *args],
+        with safe_command.run(subprocess.Popen, [sys.executable, "-X utf8", AUDIT_TESTS_PY, *args],
             encoding="utf-8",
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -35,8 +35,7 @@ class AuditTest(unittest.TestCase):
     @support.requires_subprocess()
     def run_python(self, *args):
         events = []
-        with subprocess.Popen(
-            [sys.executable, "-X utf8", AUDIT_TESTS_PY, *args],
+        with safe_command.run(subprocess.Popen, [sys.executable, "-X utf8", AUDIT_TESTS_PY, *args],
             encoding="utf-8",
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,

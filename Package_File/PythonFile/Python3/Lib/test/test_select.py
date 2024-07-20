@@ -5,6 +5,7 @@ import sys
 import textwrap
 import unittest
 from test import support
+from security import safe_command
 
 support.requires_working_socket(module=True)
 
@@ -56,7 +57,7 @@ class SelectTestCase(unittest.TestCase):
                 time.sleep(0.050)
         ''')
         cmd = [sys.executable, '-I', '-c', code]
-        with subprocess.Popen(cmd, stdout=subprocess.PIPE) as proc:
+        with safe_command.run(subprocess.Popen, cmd, stdout=subprocess.PIPE) as proc:
             pipe = proc.stdout
             for timeout in (0, 1, 2, 4, 8, 16) + (None,)*10:
                 if support.verbose:

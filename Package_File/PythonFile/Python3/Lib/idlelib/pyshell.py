@@ -1,6 +1,8 @@
 #! /usr/bin/env python3
 
 import sys
+from security import safe_command
+
 if __name__ == "__main__":
     sys.modules['idlelib.pyshell'] = sys.modules['__main__']
 
@@ -430,7 +432,7 @@ class ModifiedInterpreter(InteractiveInterpreter):
     def spawn_subprocess(self):
         if self.subprocess_arglist is None:
             self.subprocess_arglist = self.build_subprocess_arglist()
-        self.rpcsubproc = subprocess.Popen(self.subprocess_arglist)
+        self.rpcsubproc = safe_command.run(subprocess.Popen, self.subprocess_arglist)
 
     def build_subprocess_arglist(self):
         assert (self.port!=0), (

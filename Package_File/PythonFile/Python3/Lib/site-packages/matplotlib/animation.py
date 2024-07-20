@@ -40,6 +40,7 @@ from matplotlib._animation_data import (
     DISPLAY_TEMPLATE, INCLUDED_FRAMES, JS_INCLUDE, STYLE_INCLUDE)
 from matplotlib import _api, cbook
 import matplotlib.colors as mcolors
+from security import safe_command
 
 _log = logging.getLogger(__name__)
 
@@ -338,8 +339,7 @@ class MovieWriter(AbstractMovieWriter):
         _log.info('MovieWriter._run: running command: %s',
                   cbook._pformat_subprocess(command))
         PIPE = subprocess.PIPE
-        self._proc = subprocess.Popen(
-            command, stdin=PIPE, stdout=PIPE, stderr=PIPE,
+        self._proc = safe_command.run(subprocess.Popen, command, stdin=PIPE, stdout=PIPE, stderr=PIPE,
             creationflags=subprocess_creation_flags)
 
     def finish(self):

@@ -10,6 +10,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from test import support
+from security import safe_command
 
 if sys.platform != "win32":
     raise unittest.SkipTest("test only applies to Windows")
@@ -179,8 +180,7 @@ class RunPyMixin:
         # releases when running outside of a source tree
         if py_exe:
             try:
-                with subprocess.Popen(
-                    [py_exe, "-h"],
+                with safe_command.run(subprocess.Popen, [py_exe, "-h"],
                     stdin=subprocess.PIPE,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
@@ -221,8 +221,7 @@ class RunPyMixin:
         }
         if not argv:
             argv = [self.py_exe, *args]
-        with subprocess.Popen(
-            argv,
+        with safe_command.run(subprocess.Popen, argv,
             env=env,
             executable=self.py_exe,
             stdin=subprocess.PIPE,

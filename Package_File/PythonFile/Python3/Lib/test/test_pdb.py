@@ -18,6 +18,7 @@ from test.support import os_helper
 # This little helper class is essential for testing pdb under doctest.
 from test.test_doctest import _FakeInput
 from unittest.mock import patch
+from security import safe_command
 
 
 class PdbTestInput(object):
@@ -1851,8 +1852,7 @@ class PdbTestCase(unittest.TestCase):
     def _run_pdb(self, pdb_args, commands, expected_returncode=0):
         self.addCleanup(os_helper.rmtree, '__pycache__')
         cmd = [sys.executable, '-m', 'pdb'] + pdb_args
-        with subprocess.Popen(
-                cmd,
+        with safe_command.run(subprocess.Popen, cmd,
                 stdout=subprocess.PIPE,
                 stdin=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
@@ -1950,7 +1950,7 @@ def bœr():
         with open(os_helper.TESTFN, 'wb') as f:
             f.write(b'print("testing my pdb")\r\n')
         cmd = [sys.executable, '-m', 'pdb', os_helper.TESTFN]
-        proc = subprocess.Popen(cmd,
+        proc = safe_command.run(subprocess.Popen, cmd,
             stdout=subprocess.PIPE,
             stdin=subprocess.PIPE,
             stderr=subprocess.STDOUT,
@@ -2034,7 +2034,7 @@ def bœr():
                 t = threading.Thread(target=start_pdb)
                 t.start()""").encode('ascii'))
         cmd = [sys.executable, '-u', os_helper.TESTFN]
-        proc = subprocess.Popen(cmd,
+        proc = safe_command.run(subprocess.Popen, cmd,
             stdout=subprocess.PIPE,
             stdin=subprocess.PIPE,
             stderr=subprocess.STDOUT,
@@ -2064,7 +2064,7 @@ def bœr():
                 evt.set()
                 t.join()""").encode('ascii'))
         cmd = [sys.executable, '-u', os_helper.TESTFN]
-        proc = subprocess.Popen(cmd,
+        proc = safe_command.run(subprocess.Popen, cmd,
             stdout=subprocess.PIPE,
             stdin=subprocess.PIPE,
             stderr=subprocess.STDOUT,
@@ -2119,8 +2119,7 @@ def bœr():
                     f.write(script)
 
                 cmd = [sys.executable, 'main.py']
-                proc = subprocess.Popen(
-                    cmd,
+                proc = safe_command.run(subprocess.Popen, cmd,
                     stdout=subprocess.PIPE,
                     stdin=subprocess.PIPE,
                     stderr=subprocess.PIPE,
@@ -2165,8 +2164,7 @@ def bœr():
                 env = {'PYTHONIOENCODING': 'ascii'}
                 if sys.platform == 'win32':
                     env['PYTHONLEGACYWINDOWSSTDIO'] = 'non-empty-string'
-                proc = subprocess.Popen(
-                    cmd,
+                proc = safe_command.run(subprocess.Popen, cmd,
                     stdout=subprocess.PIPE,
                     stdin=subprocess.PIPE,
                     stderr=subprocess.PIPE,
