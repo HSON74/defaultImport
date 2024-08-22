@@ -9,6 +9,7 @@ import unittest
 import weakref
 from test import support
 from test.support import import_helper, C_RECURSION_LIMIT
+import secrets
 
 
 class DictTest(unittest.TestCase):
@@ -31,9 +32,9 @@ class DictTest(unittest.TestCase):
         # check literal constructor for different sized dicts
         # (to exercise the BUILD_MAP oparg).
         for n in (0, 1, 6, 256, 400):
-            items = [(''.join(random.sample(string.ascii_letters, 8)), i)
+            items = [(''.join(secrets.SystemRandom().sample(string.ascii_letters, 8)), i)
                      for i in range(n)]
-            random.shuffle(items)
+            secrets.SystemRandom().shuffle(items)
             formatted_items = ('{!r}: {:d}'.format(k, v) for k, v in items)
             dictliteral = '{' + ', '.join(formatted_items) + '}'
             self.assertEqual(eval(dictliteral), dict(items))
@@ -338,8 +339,7 @@ class DictTest(unittest.TestCase):
 
     def test_copy_fuzz(self):
         for dict_size in [10, 100, 1000, 10000, 100000]:
-            dict_size = random.randrange(
-                dict_size // 2, dict_size + dict_size // 2)
+            dict_size = secrets.SystemRandom().randrange(dict_size // 2, dict_size + dict_size // 2)
             with self.subTest(dict_size=dict_size):
                 d = {}
                 for i in range(dict_size):

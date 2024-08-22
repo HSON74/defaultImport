@@ -10,9 +10,9 @@ import decimal
 import math
 import os
 import platform
-import random
 import struct
 import sys
+import secrets
 
 
 eps = 1E-05
@@ -700,16 +700,14 @@ class MathTests(unittest.TestCase):
                 self.fail("test %d failed: got ValueError, expected %r "
                           "for math.fsum(%.100r)" % (i, expected, vals))
             self.assertEqual(actual, expected)
-
-        from random import random, gauss, shuffle
         for j in range(1000):
             vals = [7, 1e100, -7, -1e100, -9e-20, 8e-20] * 10
             s = 0
             for i in range(200):
-                v = gauss(0, random()) ** 7 - s
+                v = secrets.SystemRandom().gauss(0, secrets.SystemRandom().random()) ** 7 - s
                 s += v
                 vals.append(v)
-            shuffle(vals)
+            secrets.SystemRandom().shuffle(vals)
 
             s = msum(vals)
             self.assertEqual(msum(vals), math.fsum(vals))
@@ -909,8 +907,8 @@ class MathTests(unittest.TestCase):
         # against a straightforward pure python implementation
         for i in range(9):
             for j in range(5):
-                p = tuple(random.uniform(-5, 5) for k in range(i))
-                q = tuple(random.uniform(-5, 5) for k in range(i))
+                p = tuple(secrets.SystemRandom().uniform(-5, 5) for k in range(i))
+                q = tuple(secrets.SystemRandom().uniform(-5, 5) for k in range(i))
                 self.assertAlmostEqual(
                     dist(p, q),
                     sqrt(sum((px - qx) ** 2.0 for px, qx in zip(p, q)))
@@ -976,7 +974,7 @@ class MathTests(unittest.TestCase):
 
         # Verify that the one dimensional case is equivalent to abs()
         for i in range(20):
-            p, q = random.random(), random.random()
+            p, q = secrets.SystemRandom().random(), secrets.SystemRandom().random()
             self.assertEqual(dist((p,), (q,)), abs(p - q))
 
         # Test special values
@@ -1380,7 +1378,6 @@ class MathTests(unittest.TestCase):
         from itertools import starmap
         from collections import namedtuple
         from math import log2, exp2, fabs
-        from random import choices, uniform, shuffle
         from statistics import median
 
         DotExample = namedtuple('DotExample', ('x', 'y', 'target_sumprod', 'condition'))
@@ -1415,22 +1412,22 @@ class MathTests(unittest.TestCase):
             b = log2(c)
 
             # First half with exponents from 0 to |_b/2_| and random ints in between
-            e = choices(range(int(b/2)), k=n2)
+            e = secrets.SystemRandom().choices(range(int(b/2)), k=n2)
             e[0] = int(b / 2) + 1
             e[-1] = 0.0
 
-            x[:n2] = [uniform(-1.0, 1.0) * exp2(p) for p in e]
-            y[:n2] = [uniform(-1.0, 1.0) * exp2(p) for p in e]
+            x[:n2] = [secrets.SystemRandom().uniform(-1.0, 1.0) * exp2(p) for p in e]
+            y[:n2] = [secrets.SystemRandom().uniform(-1.0, 1.0) * exp2(p) for p in e]
 
             # Second half
             e = list(map(round, linspace(b/2, 0.0 , n-n2)))
             for i in range(n2, n):
-                x[i] = uniform(-1.0, 1.0) * exp2(e[i - n2])
-                y[i] = (uniform(-1.0, 1.0) * exp2(e[i - n2]) - DotExact(x, y)) / x[i]
+                x[i] = secrets.SystemRandom().uniform(-1.0, 1.0) * exp2(e[i - n2])
+                y[i] = (secrets.SystemRandom().uniform(-1.0, 1.0) * exp2(e[i - n2]) - DotExact(x, y)) / x[i]
 
             # Shuffle
             pairs = list(zip(x, y))
-            shuffle(pairs)
+            secrets.SystemRandom().shuffle(pairs)
             x, y = zip(*pairs)
 
             return DotExample(x, y, DotExact(x, y), Condition(x, y))

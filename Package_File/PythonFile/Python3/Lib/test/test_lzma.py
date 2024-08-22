@@ -4,7 +4,6 @@ from io import BytesIO, UnsupportedOperation, DEFAULT_BUFFER_SIZE
 import os
 import pathlib
 import pickle
-import random
 import sys
 from test import support
 import unittest
@@ -14,6 +13,7 @@ from test.support.import_helper import import_module
 from test.support.os_helper import (
     TESTFN, unlink
 )
+import secrets
 
 lzma = import_module("lzma")
 from lzma import LZMACompressor, LZMADecompressor, LZMAError, LZMAFile
@@ -353,7 +353,7 @@ class CompressorDecompressorTestCase(unittest.TestCase):
     def test_decompressor_bigmem(self, size):
         lzd = LZMADecompressor()
         blocksize = min(10 * 1024 * 1024, size)
-        block = random.randbytes(blocksize)
+        block = secrets.SystemRandom().randbytes(blocksize)
         try:
             input = block * ((size-1) // blocksize + 1)
             cdata = lzma.compress(input)

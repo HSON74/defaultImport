@@ -10,7 +10,6 @@ import builtins
 import unittest
 import re
 import tempfile
-import random
 import string
 from test import support
 import shutil
@@ -26,6 +25,7 @@ import textwrap
 import traceback
 from functools import partial
 from pathlib import Path
+import secrets
 
 MODULE_PREFIX = f'{__name__}.' if __name__ == '__main__' else ''
 
@@ -3139,7 +3139,7 @@ class SuggestionFormattingTestBase:
         sys.path.append(str(tmpdir))
         self.addCleanup(sys.path.pop)
 
-        mod_name = ''.join(random.choices(string.ascii_letters, k=16))
+        mod_name = ''.join(secrets.SystemRandom().choices(string.ascii_letters, k=16))
         module = tmpdir / (mod_name + ".py")
         module.write_text(code)
 

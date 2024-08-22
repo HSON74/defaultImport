@@ -6,8 +6,8 @@ import gc
 import weakref
 import copy
 import pickle
-import random
 import struct
+import secrets
 
 BIG = 100000
 
@@ -232,7 +232,7 @@ class TestBasic(unittest.TestCase):
         for i in range(n):
             d.popleft()
             l.pop(0)
-            if random.random() < 0.5:
+            if secrets.SystemRandom().random() < 0.5:
                 d.append(i)
                 l.append(i)
             for j in range(1-len(l), len(l)):
@@ -397,7 +397,7 @@ class TestBasic(unittest.TestCase):
         self.assertRaises(IndexError, d.__delitem__, n)
         for i in range(n):
             self.assertEqual(len(d), n-i)
-            j = random.randrange(-len(d), len(d))
+            j = secrets.SystemRandom().randrange(-len(d), len(d))
             val = d[j]
             self.assertIn(val, d)
             del d[j]
@@ -406,7 +406,7 @@ class TestBasic(unittest.TestCase):
 
     def test_reverse(self):
         n = 500         # O(n**2) test, don't make this too big
-        data = [random.random() for i in range(n)]
+        data = [secrets.SystemRandom().random() for i in range(n)]
         for i in range(n):
             d = deque(data[:i])
             r = d.reverse()
@@ -688,7 +688,7 @@ class TestBasic(unittest.TestCase):
 
         for i in range(5):
             for maxlen in range(-1, 6):
-                s = [random.random() for j in range(i)]
+                s = [secrets.SystemRandom().random() for j in range(i)]
                 d = deque(s) if maxlen == -1 else deque(s, maxlen)
                 e = d.copy()
                 self.assertEqual(d, e)

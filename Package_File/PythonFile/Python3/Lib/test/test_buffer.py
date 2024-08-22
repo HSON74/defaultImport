@@ -19,11 +19,11 @@ from test import support
 from test.support import os_helper
 import inspect
 from itertools import permutations, product
-from random import randrange, sample, choice
 import warnings
 import sys, array, io, os
 from decimal import Decimal
 from fractions import Fraction
+import secrets
 
 try:
     from _testbuffer import *
@@ -163,7 +163,7 @@ cap = {         # format chars                  # multiplier
 def randrange_fmt(mode, char, obj):
     """Return random item for a type specified by a mode and a single
        format character."""
-    x = randrange(*fmtdict[mode][char])
+    x = secrets.SystemRandom().randrange(*fmtdict[mode][char])
     if char == 'c':
         x = bytes([x])
         if obj == 'numpy' and x == b'\x00':
@@ -194,13 +194,13 @@ def gen_items(n, fmt, obj):
     return lst
 
 def struct_items(n, obj):
-    mode = choice(cap[obj][MODE])
+    mode = secrets.choice(cap[obj][MODE])
     xfmt = mode + '#'
     fmt = mode.strip('amb')
-    nmemb = randrange(2, 10) # number of struct members
+    nmemb = secrets.SystemRandom().randrange(2, 10) # number of struct members
     for _ in range(nmemb):
-        char = choice(tuple(fmtdict[mode]))
-        multiplier = choice(cap[obj][MULT])
+        char = secrets.choice(tuple(fmtdict[mode]))
+        multiplier = secrets.choice(cap[obj][MULT])
         xfmt += (char * int(multiplier if multiplier else 1))
         fmt += (multiplier + char)
     items = gen_items(n, xfmt, obj)
@@ -210,10 +210,10 @@ def struct_items(n, obj):
 def randitems(n, obj='ndarray', mode=None, char=None):
     """Return random format, items, item."""
     if mode is None:
-        mode = choice(cap[obj][MODE])
+        mode = secrets.choice(cap[obj][MODE])
     if char is None:
-        char = choice(tuple(fmtdict[mode]))
-    multiplier = choice(cap[obj][MULT])
+        char = secrets.choice(tuple(fmtdict[mode]))
+    multiplier = secrets.choice(cap[obj][MULT])
     fmt = mode + '#' + char * int(multiplier if multiplier else 1)
     items = gen_items(n, fmt, obj)
     item = gen_item(fmt, obj)
@@ -499,18 +499,18 @@ def rand_structure(itemsize, valid, maxdim=5, maxshape=16, shape=()):
        If 'shape' is given, use that instead of creating a random shape.
     """
     if not shape:
-        ndim = randrange(maxdim+1)
+        ndim = secrets.SystemRandom().randrange(maxdim+1)
         if (ndim == 0):
             if valid:
                 return itemsize, itemsize, ndim, (), (), 0
             else:
-                nitems = randrange(1, 16+1)
+                nitems = secrets.SystemRandom().randrange(1, 16+1)
                 memlen = nitems * itemsize
-                offset = -itemsize if randrange(2) == 0 else memlen
+                offset = -itemsize if secrets.SystemRandom().randrange(2) == 0 else memlen
                 return memlen, itemsize, ndim, (), (), offset
 
         minshape = 2
-        n = randrange(100)
+        n = secrets.SystemRandom().randrange(100)
         if n >= 95 and valid:
             minshape = 0
         elif n >= 90:
@@ -518,26 +518,26 @@ def rand_structure(itemsize, valid, maxdim=5, maxshape=16, shape=()):
         shape = [0] * ndim
 
         for i in range(ndim):
-            shape[i] = randrange(minshape, maxshape+1)
+            shape[i] = secrets.SystemRandom().randrange(minshape, maxshape+1)
     else:
         ndim = len(shape)
 
     maxstride = 5
-    n = randrange(100)
+    n = secrets.SystemRandom().randrange(100)
     zero_stride = True if n >= 95 and n & 1 else False
 
     strides = [0] * ndim
-    strides[ndim-1] = itemsize * randrange(-maxstride, maxstride+1)
+    strides[ndim-1] = itemsize * secrets.SystemRandom().randrange(-maxstride, maxstride+1)
     if not zero_stride and strides[ndim-1] == 0:
         strides[ndim-1] = itemsize
 
     for i in range(ndim-2, -1, -1):
         maxstride *= shape[i+1] if shape[i+1] else 1
         if zero_stride:
-            strides[i] = itemsize * randrange(-maxstride, maxstride+1)
+            strides[i] = itemsize * secrets.SystemRandom().randrange(-maxstride, maxstride+1)
         else:
-            strides[i] = ((1,-1)[randrange(2)] *
-                          itemsize * randrange(1, maxstride+1))
+            strides[i] = ((1,-1)[secrets.SystemRandom().randrange(2)] *
+                          itemsize * secrets.SystemRandom().randrange(1, maxstride+1))
 
     imin = imax = 0
     if not 0 in shape:
@@ -552,15 +552,15 @@ def rand_structure(itemsize, valid, maxdim=5, maxshape=16, shape=()):
         memlen = offset + (imax+1) * itemsize
     else:
         memlen = (-imin + imax) * itemsize
-        offset = -imin-itemsize if randrange(2) == 0 else memlen
+        offset = -imin-itemsize if secrets.SystemRandom().randrange(2) == 0 else memlen
     return memlen, itemsize, ndim, shape, strides, offset
 
 def randslice_from_slicelen(slicelen, listlen):
     """Create a random slice of len slicelen that fits into listlen."""
     maxstart = listlen - slicelen
-    start = randrange(maxstart+1)
+    start = secrets.SystemRandom().randrange(maxstart+1)
     maxstep = (listlen - start) // slicelen if slicelen else 1
-    step = randrange(1, maxstep+1)
+    step = secrets.SystemRandom().randrange(1, maxstep+1)
     stop = start + slicelen * step
     s = slice(start, stop, step)
     _, _, _, control = slice_indices(s, listlen)
@@ -575,7 +575,7 @@ def randslice_from_shape(ndim, shape):
     rslices = [0] * ndim
     for n in range(ndim):
         l = shape[n]
-        slicelen = randrange(1, l+1) if l > 0 else 0
+        slicelen = secrets.SystemRandom().randrange(1, l+1) if l > 0 else 0
         lslices[n] = randslice_from_slicelen(slicelen, l)
         rslices[n] = randslice_from_slicelen(slicelen, l)
     return tuple(lslices), tuple(rslices)
@@ -584,37 +584,37 @@ def rand_aligned_slices(maxdim=5, maxshape=16):
     """Create (lshape, rshape, tuple(lslices), tuple(rslices)) such that
        shapeof(x[lslices]) == shapeof(y[rslices]), where x is an array
        with shape 'lshape' and y is an array with shape 'rshape'."""
-    ndim = randrange(1, maxdim+1)
+    ndim = secrets.SystemRandom().randrange(1, maxdim+1)
     minshape = 2
-    n = randrange(100)
+    n = secrets.SystemRandom().randrange(100)
     if n >= 95:
         minshape = 0
     elif n >= 90:
         minshape = 1
-    all_random = True if randrange(100) >= 80 else False
+    all_random = True if secrets.SystemRandom().randrange(100) >= 80 else False
     lshape = [0]*ndim; rshape = [0]*ndim
     lslices = [0]*ndim; rslices = [0]*ndim
 
     for n in range(ndim):
-        small = randrange(minshape, maxshape+1)
-        big = randrange(minshape, maxshape+1)
+        small = secrets.SystemRandom().randrange(minshape, maxshape+1)
+        big = secrets.SystemRandom().randrange(minshape, maxshape+1)
         if big < small:
             big, small = small, big
 
         # Create a slice that fits the smaller value.
         if all_random:
-            start = randrange(-small, small+1)
-            stop = randrange(-small, small+1)
-            step = (1,-1)[randrange(2)] * randrange(1, small+2)
+            start = secrets.SystemRandom().randrange(-small, small+1)
+            stop = secrets.SystemRandom().randrange(-small, small+1)
+            step = (1,-1)[secrets.SystemRandom().randrange(2)] * secrets.SystemRandom().randrange(1, small+2)
             s_small = slice(start, stop, step)
             _, _, _, slicelen = slice_indices(s_small, small)
         else:
-            slicelen = randrange(1, small+1) if small > 0 else 0
+            slicelen = secrets.SystemRandom().randrange(1, small+1) if small > 0 else 0
             s_small = randslice_from_slicelen(slicelen, small)
 
         # Create a slice of the same length for the bigger value.
         s_big = randslice_from_slicelen(slicelen, big)
-        if randrange(2) == 0:
+        if secrets.SystemRandom().randrange(2) == 0:
             rshape[n], lshape[n] = big, small
             rslices[n], lslices[n] = s_big, s_small
         else:
@@ -686,12 +686,12 @@ def gencastshapes():
     """Generate shapes to test casting."""
     for n in range(32):
         yield [n]
-    ndim = randrange(4, 6)
-    minshape = 1 if randrange(100) > 80 else 2
-    yield [randrange(minshape, 5) for _ in range(ndim)]
-    ndim = randrange(2, 4)
-    minshape = 1 if randrange(100) > 80 else 2
-    yield [randrange(minshape, 5) for _ in range(ndim)]
+    ndim = secrets.SystemRandom().randrange(4, 6)
+    minshape = 1 if secrets.SystemRandom().randrange(100) > 80 else 2
+    yield [secrets.SystemRandom().randrange(minshape, 5) for _ in range(ndim)]
+    ndim = secrets.SystemRandom().randrange(2, 4)
+    minshape = 1 if secrets.SystemRandom().randrange(100) > 80 else 2
+    yield [secrets.SystemRandom().randrange(minshape, 5) for _ in range(ndim)]
 
 
 # ======================================================================
@@ -712,7 +712,7 @@ def rslice(n, allow_empty=False):
        If zero=True, the slices may be empty, otherwise they will
        be non-empty."""
     minlen = 0 if allow_empty or n == 0 else 1
-    slicelen = randrange(minlen, n+1)
+    slicelen = secrets.SystemRandom().randrange(minlen, n+1)
     return randslice_from_slicelen(slicelen, n)
 
 def rslices(n, allow_empty=False):
@@ -734,7 +734,7 @@ def rslices_ndim(ndim, shape, iterations=5):
 def rpermutation(iterable, r=None):
     pool = tuple(iterable)
     r = len(pool) if r is None else r
-    yield tuple(sample(pool, r))
+    yield tuple(secrets.SystemRandom().sample(pool, r))
 
 def ndarray_print(nd):
     """Print ndarray for debugging."""
@@ -1320,7 +1320,7 @@ class TestBufferProtocol(unittest.TestCase):
 
     def test_ndarray_format_shape(self):
         # ndim = 1, shape = [n]
-        nitems =  randrange(1, 10)
+        nitems =  secrets.SystemRandom().randrange(1, 10)
         for fmt, items, _ in iter_format(nitems):
             itemsize = struct.calcsize(fmt)
             for flags in (0, ND_PIL):
@@ -1332,7 +1332,7 @@ class TestBufferProtocol(unittest.TestCase):
 
     def test_ndarray_format_strides(self):
         # ndim = 1, strides
-        nitems = randrange(1, 30)
+        nitems = secrets.SystemRandom().randrange(1, 30)
         for fmt, items, _ in iter_format(nitems):
             itemsize = struct.calcsize(fmt)
             for step in range(-5, 5):
@@ -1359,7 +1359,7 @@ class TestBufferProtocol(unittest.TestCase):
 
     def test_ndarray_multidim(self):
         for ndim in range(5):
-            shape_t = [randrange(2, 10) for _ in range(ndim)]
+            shape_t = [secrets.SystemRandom().randrange(2, 10) for _ in range(ndim)]
             nitems = prod(shape_t)
             for shape in permutations(shape_t):
 
@@ -2588,10 +2588,10 @@ class TestBufferProtocol(unittest.TestCase):
     def test_memoryview_cast_invalid(self):
         # invalid format
         for sfmt in NON_BYTE_FORMAT:
-            sformat = '@' + sfmt if randrange(2) else sfmt
+            sformat = '@' + sfmt if secrets.SystemRandom().randrange(2) else sfmt
             ssize = struct.calcsize(sformat)
             for dfmt in NON_BYTE_FORMAT:
-                dformat = '@' + dfmt if randrange(2) else dfmt
+                dformat = '@' + dfmt if secrets.SystemRandom().randrange(2) else dfmt
                 dsize = struct.calcsize(dformat)
                 ex = ndarray(list(range(32)), shape=[32//ssize], format=sformat)
                 msrc = memoryview(ex)
@@ -2770,7 +2770,7 @@ class TestBufferProtocol(unittest.TestCase):
                 # other than 0 or 1.
                 if char == "?":
                     continue
-                tfmt = ('', '@')[randrange(2)] + char
+                tfmt = ('', '@')[secrets.SystemRandom().randrange(2)] + char
                 tsize = struct.calcsize(tfmt)
                 n = prod(_tshape) * tsize
                 obj = 'memoryview' if is_byte_format(tfmt) else 'bytefmt'
@@ -2992,7 +2992,7 @@ class TestBufferProtocol(unittest.TestCase):
                 continue
             ex = ndarray([1,2,3], shape=[3], format=fmt, flags=ND_WRITABLE)
             m = memoryview(ex)
-            i = randrange(-3, 3)
+            i = secrets.SystemRandom().randrange(-3, 3)
             m[i] = 8
             self.assertEqual(m[i], 8)
             self.assertEqual(m[i], ex[i])

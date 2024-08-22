@@ -1,3 +1,5 @@
+import secrets
+
 x = """Test suite for statistics module, including helper NumericTestCase and
 approx_equal function.
 
@@ -731,7 +733,7 @@ class ExactRatioTest(unittest.TestCase):
     def test_float(self):
         self.assertEqual(statistics._exact_ratio(0.125), (1, 8))
         self.assertEqual(statistics._exact_ratio(1.125), (9, 8))
-        data = [random.uniform(-100, 100) for _ in range(100)]
+        data = [secrets.SystemRandom().uniform(-100, 100) for _ in range(100)]
         for x in data:
             num, den = statistics._exact_ratio(x)
             self.assertEqual(x, num/den)
@@ -1030,7 +1032,7 @@ class FailNegTest(unittest.TestCase):
 
     def test_error_msg(self):
         # Test that a given error message is used.
-        msg = "badness #%d" % random.randint(10000, 99999)
+        msg = "badness #%d" % secrets.SystemRandom().randint(10000, 99999)
         try:
             next(statistics._fail_neg([-1], msg))
         except statistics.StatisticsError as e:
@@ -1058,7 +1060,7 @@ class UnivariateCommonMixin:
         """Return int data for various tests."""
         data = list(range(10))
         while data == sorted(data):
-            random.shuffle(data)
+            secrets.SystemRandom().shuffle(data)
         return data
 
     def test_no_inplace_modifications(self):
@@ -1080,7 +1082,7 @@ class UnivariateCommonMixin:
         # or Fractions.
         data = [1, 2, 3, 3, 3, 4, 5, 6]*100
         expected = self.func(data)
-        random.shuffle(data)
+        secrets.SystemRandom().shuffle(data)
         actual = self.func(data)
         self.assertEqual(expected, actual)
 
@@ -1232,7 +1234,7 @@ class TestSum(NumericTestCase):
         # Compare with the math.fsum function.
         # Ideally we ought to get the exact same result, but sometimes
         # we differ by a very slight amount :-(
-        data = [random.uniform(-100, 1000) for _ in range(1000)]
+        data = [secrets.SystemRandom().uniform(-100, 1000) for _ in range(1000)]
         self.assertApproxEqual(float(self.func(data)[1]), math.fsum(data), rel=2e-16)
 
     def test_strings_fail(self):
@@ -1361,27 +1363,27 @@ class TestMean(NumericTestCase, AverageMixin, UnivariateTypeMixin):
     def test_ints(self):
         # Test mean with ints.
         data = [0, 1, 2, 3, 3, 3, 4, 5, 5, 6, 7, 7, 7, 7, 8, 9]
-        random.shuffle(data)
+        secrets.SystemRandom().shuffle(data)
         self.assertEqual(self.func(data), 4.8125)
 
     def test_floats(self):
         # Test mean with floats.
         data = [17.25, 19.75, 20.0, 21.5, 21.75, 23.25, 25.125, 27.5]
-        random.shuffle(data)
+        secrets.SystemRandom().shuffle(data)
         self.assertEqual(self.func(data), 22.015625)
 
     def test_decimals(self):
         # Test mean with Decimals.
         D = Decimal
         data = [D("1.634"), D("2.517"), D("3.912"), D("4.072"), D("5.813")]
-        random.shuffle(data)
+        secrets.SystemRandom().shuffle(data)
         self.assertEqual(self.func(data), D("3.5896"))
 
     def test_fractions(self):
         # Test mean with Fractions.
         F = Fraction
         data = [F(1, 2), F(2, 3), F(3, 4), F(4, 5), F(5, 6), F(6, 7), F(7, 8)]
-        random.shuffle(data)
+        secrets.SystemRandom().shuffle(data)
         self.assertEqual(self.func(data), F(1479, 1960))
 
     def test_inf(self):
@@ -1421,7 +1423,7 @@ class TestMean(NumericTestCase, AverageMixin, UnivariateTypeMixin):
 
     def test_doubled_data(self):
         # Mean of [a,b,c...z] should be same as for [a,a,b,b,c,c...z,z].
-        data = [random.uniform(-3, 5) for _ in range(1000)]
+        data = [secrets.SystemRandom().uniform(-3, 5) for _ in range(1000)]
         expected = self.func(data)
         actual = self.func(data*2)
         self.assertApproxEqual(actual, expected)
@@ -1487,13 +1489,13 @@ class TestHarmonicMean(NumericTestCase, AverageMixin, UnivariateTypeMixin):
     def test_ints(self):
         # Test harmonic mean with ints.
         data = [2, 4, 4, 8, 16, 16]
-        random.shuffle(data)
+        secrets.SystemRandom().shuffle(data)
         self.assertEqual(self.func(data), 6*4/5)
 
     def test_floats_exact(self):
         # Test harmonic mean with some carefully chosen floats.
         data = [1/8, 1/4, 1/4, 1/2, 1/2]
-        random.shuffle(data)
+        secrets.SystemRandom().shuffle(data)
         self.assertEqual(self.func(data), 1/4)
         self.assertEqual(self.func([0.25, 0.5, 1.0, 1.0]), 0.5)
 
@@ -1507,17 +1509,17 @@ class TestHarmonicMean(NumericTestCase, AverageMixin, UnivariateTypeMixin):
         D = Decimal
         self.assertEqual(self.func([D(15), D(30), D(60), D(60)]), D(30))
         data = [D("0.05"), D("0.10"), D("0.20"), D("0.20")]
-        random.shuffle(data)
+        secrets.SystemRandom().shuffle(data)
         self.assertEqual(self.func(data), D("0.10"))
         data = [D("1.68"), D("0.32"), D("5.94"), D("2.75")]
-        random.shuffle(data)
+        secrets.SystemRandom().shuffle(data)
         self.assertEqual(self.func(data), D(66528)/70723)
 
     def test_fractions(self):
         # Test harmonic mean with Fractions.
         F = Fraction
         data = [F(1, 2), F(2, 3), F(3, 4), F(4, 5), F(5, 6), F(6, 7), F(7, 8)]
-        random.shuffle(data)
+        secrets.SystemRandom().shuffle(data)
         self.assertEqual(self.func(data), F(7*420, 4029))
 
     def test_inf(self):
@@ -1540,7 +1542,7 @@ class TestHarmonicMean(NumericTestCase, AverageMixin, UnivariateTypeMixin):
 
     def test_doubled_data(self):
         # Harmonic mean of [a,b...z] should be same as for [a,a,b,b...z,z].
-        data = [random.uniform(1, 5) for _ in range(1000)]
+        data = [secrets.SystemRandom().uniform(1, 5) for _ in range(1000)]
         expected = self.func(data)
         actual = self.func(data*2)
         self.assertApproxEqual(actual, expected)
@@ -1596,7 +1598,7 @@ class TestMedian(NumericTestCase, AverageMixin):
         F = Fraction
         data = [F(1, 7), F(2, 7), F(3, 7), F(4, 7), F(5, 7)]
         assert len(data)%2 == 1
-        random.shuffle(data)
+        secrets.SystemRandom().shuffle(data)
         self.assertEqual(self.func(data), F(3, 7))
 
     def test_even_fractions(self):
@@ -1604,7 +1606,7 @@ class TestMedian(NumericTestCase, AverageMixin):
         F = Fraction
         data = [F(1, 7), F(2, 7), F(3, 7), F(4, 7), F(5, 7), F(6, 7)]
         assert len(data)%2 == 0
-        random.shuffle(data)
+        secrets.SystemRandom().shuffle(data)
         self.assertEqual(self.func(data), F(1, 2))
 
     def test_odd_decimals(self):
@@ -1612,7 +1614,7 @@ class TestMedian(NumericTestCase, AverageMixin):
         D = Decimal
         data = [D('2.5'), D('3.1'), D('4.2'), D('5.7'), D('5.8')]
         assert len(data)%2 == 1
-        random.shuffle(data)
+        secrets.SystemRandom().shuffle(data)
         self.assertEqual(self.func(data), D('4.2'))
 
     def test_even_decimals(self):
@@ -1620,7 +1622,7 @@ class TestMedian(NumericTestCase, AverageMixin):
         D = Decimal
         data = [D('1.2'), D('2.5'), D('3.1'), D('4.2'), D('5.7'), D('5.8')]
         assert len(data)%2 == 0
-        random.shuffle(data)
+        secrets.SystemRandom().shuffle(data)
         self.assertEqual(self.func(data), D('3.65'))
 
 
@@ -1633,7 +1635,7 @@ class TestMedianDataType(NumericTestCase, UnivariateTypeMixin):
         data = list(range(15))
         assert len(data)%2 == 1
         while data == sorted(data):
-            random.shuffle(data)
+            secrets.SystemRandom().shuffle(data)
         return data
 
 
@@ -1652,7 +1654,7 @@ class TestMedianLow(TestMedian, UnivariateTypeMixin):
         F = Fraction
         data = [F(1, 7), F(2, 7), F(3, 7), F(4, 7), F(5, 7), F(6, 7)]
         assert len(data)%2 == 0
-        random.shuffle(data)
+        secrets.SystemRandom().shuffle(data)
         self.assertEqual(self.func(data), F(3, 7))
 
     def test_even_decimals(self):
@@ -1660,7 +1662,7 @@ class TestMedianLow(TestMedian, UnivariateTypeMixin):
         D = Decimal
         data = [D('1.1'), D('2.2'), D('3.3'), D('4.4'), D('5.5'), D('6.6')]
         assert len(data)%2 == 0
-        random.shuffle(data)
+        secrets.SystemRandom().shuffle(data)
         self.assertEqual(self.func(data), D('3.3'))
 
 
@@ -1679,7 +1681,7 @@ class TestMedianHigh(TestMedian, UnivariateTypeMixin):
         F = Fraction
         data = [F(1, 7), F(2, 7), F(3, 7), F(4, 7), F(5, 7), F(6, 7)]
         assert len(data)%2 == 0
-        random.shuffle(data)
+        secrets.SystemRandom().shuffle(data)
         self.assertEqual(self.func(data), F(4, 7))
 
     def test_even_decimals(self):
@@ -1687,7 +1689,7 @@ class TestMedianHigh(TestMedian, UnivariateTypeMixin):
         D = Decimal
         data = [D('1.1'), D('2.2'), D('3.3'), D('4.4'), D('5.5'), D('6.6')]
         assert len(data)%2 == 0
-        random.shuffle(data)
+        secrets.SystemRandom().shuffle(data)
         self.assertEqual(self.func(data), D('4.4'))
 
 
@@ -1753,7 +1755,7 @@ class TestMedianGrouped(TestMedian):
         F = Fraction
         data = [F(5, 4), F(9, 4), F(13, 4), F(13, 4), F(17, 4)]
         assert len(data)%2 == 1
-        random.shuffle(data)
+        secrets.SystemRandom().shuffle(data)
         self.assertEqual(self.func(data), 3.0)
 
     def test_even_fractions(self):
@@ -1761,7 +1763,7 @@ class TestMedianGrouped(TestMedian):
         F = Fraction
         data = [F(5, 4), F(9, 4), F(13, 4), F(13, 4), F(17, 4), F(17, 4)]
         assert len(data)%2 == 0
-        random.shuffle(data)
+        secrets.SystemRandom().shuffle(data)
         self.assertEqual(self.func(data), 3.25)
 
     def test_odd_decimals(self):
@@ -1769,7 +1771,7 @@ class TestMedianGrouped(TestMedian):
         D = Decimal
         data = [D('5.5'), D('6.5'), D('6.5'), D('7.5'), D('8.5')]
         assert len(data)%2 == 1
-        random.shuffle(data)
+        secrets.SystemRandom().shuffle(data)
         self.assertEqual(self.func(data), 6.75)
 
     def test_even_decimals(self):
@@ -1777,12 +1779,12 @@ class TestMedianGrouped(TestMedian):
         D = Decimal
         data = [D('5.5'), D('5.5'), D('6.5'), D('6.5'), D('7.5'), D('8.5')]
         assert len(data)%2 == 0
-        random.shuffle(data)
+        secrets.SystemRandom().shuffle(data)
         self.assertEqual(self.func(data), 6.5)
         #---
         data = [D('5.5'), D('5.5'), D('6.5'), D('7.5'), D('7.5'), D('8.5')]
         assert len(data)%2 == 0
-        random.shuffle(data)
+        secrets.SystemRandom().shuffle(data)
         self.assertEqual(self.func(data), 7.0)
 
     def test_interval(self):
@@ -1838,7 +1840,7 @@ class TestMode(NumericTestCase, AverageMixin, UnivariateTypeMixin):
         data = list(range(10))
         for i in range(10):
             d = data + [i]
-            random.shuffle(d)
+            secrets.SystemRandom().shuffle(d)
             self.assertEqual(self.func(d), i)
 
     def test_bimodal_data(self):
@@ -2012,7 +2014,7 @@ class VarianceStdevMixin(UnivariateCommonMixin):
         # in UnivariateCommonMixin is that an earlier design had variance and
         # friends swap between one- and two-pass algorithms, which would
         # sometimes give different results.
-        data = [random.uniform(-3, 8) for _ in range(1000)]
+        data = [secrets.SystemRandom().uniform(-3, 8) for _ in range(1000)]
         expected = self.func(data)
         self.assertEqual(self.func(iter(data)), expected)
 
@@ -2025,7 +2027,7 @@ class TestPVariance(VarianceStdevMixin, NumericTestCase, UnivariateTypeMixin):
     def test_exact_uniform(self):
         # Test the variance against an exact result for uniform data.
         data = list(range(10000))
-        random.shuffle(data)
+        secrets.SystemRandom().shuffle(data)
         expected = (10000**2 - 1)/12  # Exact value.
         self.assertEqual(self.func(data), expected)
 
@@ -2114,7 +2116,7 @@ class TestPStdev(VarianceStdevMixin, NumericTestCase):
 
     def test_compare_to_variance(self):
         # Test that stdev is, in fact, the square root of variance.
-        data = [random.uniform(-17, 24) for _ in range(1000)]
+        data = [secrets.SystemRandom().uniform(-17, 24) for _ in range(1000)]
         expected = math.sqrt(statistics.pvariance(data))
         self.assertEqual(self.func(data), expected)
 
@@ -2234,7 +2236,7 @@ class TestStdev(VarianceStdevMixin, NumericTestCase):
 
     def test_compare_to_variance(self):
         # Test that stdev is, in fact, the square root of variance.
-        data = [random.uniform(-2, 9) for _ in range(1000)]
+        data = [secrets.SystemRandom().uniform(-2, 9) for _ in range(1000)]
         expected = math.sqrt(statistics.variance(data))
         self.assertAlmostEqual(self.func(data), expected)
 
@@ -2250,7 +2252,7 @@ class TestGeometricMean(unittest.TestCase):
         self.assertAlmostEqual(geometric_mean([4.0, 9.0]), 6.0)
         self.assertAlmostEqual(geometric_mean([17.625]), 17.625)
 
-        random.seed(86753095551212)
+        secrets.SystemRandom().seed(86753095551212)
         for rng in [
                 range(1, 100),
                 range(1, 1_000),
@@ -2258,9 +2260,9 @@ class TestGeometricMean(unittest.TestCase):
                 range(500, 10_000, 3),
                 range(10_000, 500, -3),
                 [12, 17, 13, 5, 120, 7],
-                [random.expovariate(50.0) for i in range(1_000)],
-                [random.lognormvariate(20.0, 3.0) for i in range(2_000)],
-                [random.triangular(2000, 3000, 2200) for i in range(3_000)],
+                [secrets.SystemRandom().expovariate(50.0) for i in range(1_000)],
+                [secrets.SystemRandom().lognormvariate(20.0, 3.0) for i in range(2_000)],
+                [secrets.SystemRandom().triangular(2000, 3000, 2200) for i in range(3_000)],
             ]:
             gm_decimal = math.prod(map(Decimal, rng)) ** (Decimal(1) / len(rng))
             gm_float = geometric_mean(rng)
@@ -2354,7 +2356,7 @@ class TestQuantiles(unittest.TestCase):
         # against the PERCENTILE.EXC function in MS Excel.
         quantiles = statistics.quantiles
         data = [120, 200, 250, 320, 350]
-        random.shuffle(data)
+        secrets.SystemRandom().shuffle(data)
         for n, expected in [
             (1, []),
             (2, [250.0]),
@@ -2399,7 +2401,7 @@ class TestQuantiles(unittest.TestCase):
             self.assertTrue(all(math.isclose(e, a) for e, a in zip(exp, act)))
         # Q2 agrees with median()
         for k in range(2, 60):
-            data = random.choices(range(100), k=k)
+            data = secrets.SystemRandom().choices(range(100), k=k)
             q1, q2, q3 = quantiles(data)
             self.assertEqual(q2, statistics.median(data))
 
@@ -2409,7 +2411,7 @@ class TestQuantiles(unittest.TestCase):
         # and against the quantile() function in SciPy.
         quantiles = statistics.quantiles
         data = [100, 200, 400, 800]
-        random.shuffle(data)
+        secrets.SystemRandom().shuffle(data)
         for n, expected in [
             (1, []),
             (2, [300.0]),
@@ -2445,7 +2447,7 @@ class TestQuantiles(unittest.TestCase):
         # Whenever n is smaller than the number of data points, running
         # method='inclusive' should give the same result as method='exclusive'
         # after the two included extreme points are removed.
-        data = [random.randrange(10_000) for i in range(501)]
+        data = [secrets.SystemRandom().randrange(10_000) for i in range(501)]
         actual = quantiles(data, n=32, method='inclusive')
         data.remove(min(data))
         data.remove(max(data))
@@ -2453,7 +2455,7 @@ class TestQuantiles(unittest.TestCase):
         self.assertEqual(expected, actual)
         # Q2 agrees with median()
         for k in range(2, 60):
-            data = random.choices(range(100), k=k)
+            data = secrets.SystemRandom().choices(range(100), k=k)
             q1, q2, q3 = quantiles(data, method='inclusive')
             self.assertEqual(q2, statistics.median(data))
 
@@ -2468,9 +2470,9 @@ class TestQuantiles(unittest.TestCase):
     def test_equal_sized_groups(self):
         quantiles = statistics.quantiles
         total = 10_000
-        data = [random.expovariate(0.2) for i in range(total)]
+        data = [secrets.SystemRandom().expovariate(0.2) for i in range(total)]
         while len(set(data)) != total:
-            data.append(random.expovariate(0.2))
+            data.append(secrets.SystemRandom().expovariate(0.2))
         data.sort()
 
         # Cases where the group size exactly divides the total

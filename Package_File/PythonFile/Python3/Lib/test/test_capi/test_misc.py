@@ -10,7 +10,6 @@ import json
 import os
 import pickle
 import queue
-import random
 import subprocess
 import sys
 import textwrap
@@ -28,6 +27,8 @@ from test.support import threading_helper
 from test.support import warnings_helper
 from test.support import requires_limited_api
 from test.support.script_helper import assert_python_failure, assert_python_ok, run_python_until_end
+import secrets
+
 try:
     import _posixsubprocess
 except ImportError:
@@ -1217,7 +1218,7 @@ class TestPendingCalls(unittest.TestCase):
             l.append(None)
 
         for i in range(n):
-            time.sleep(random.random()*0.02) #0.01 secs on average
+            time.sleep(secrets.SystemRandom().random()*0.02) #0.01 secs on average
             #try submitting callback until successful.
             #rely on regular interrupt to flush queue if we are
             #unsuccessful.

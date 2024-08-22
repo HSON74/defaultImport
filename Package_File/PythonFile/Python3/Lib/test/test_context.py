@@ -2,12 +2,12 @@ import concurrent.futures
 import contextvars
 import functools
 import gc
-import random
 import time
 import unittest
 import weakref
 from test import support
 from test.support import threading_helper
+import secrets
 
 try:
     from _testcapi import hamt
@@ -350,7 +350,7 @@ class ContextTest(unittest.TestCase):
         def sub(num):
             for i in range(10):
                 cvar.set(num + i)
-                time.sleep(random.uniform(0.001, 0.05))
+                time.sleep(secrets.SystemRandom().uniform(0.001, 0.05))
                 self.assertEqual(cvar.get(), num + i)
             return num
 
@@ -611,7 +611,7 @@ class HamtTest(unittest.TestCase):
                 self.assertEqual(h.get(KeyStr(key), 'not found'), key)
 
             keys_to_delete = list(range(COLLECTION_SIZE))
-            random.shuffle(keys_to_delete)
+            secrets.SystemRandom().shuffle(keys_to_delete)
             for iter_i, i in enumerate(keys_to_delete):
                 key = KeyStr(i)
 

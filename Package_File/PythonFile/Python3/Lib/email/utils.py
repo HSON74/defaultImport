@@ -3,6 +3,7 @@
 # Contact: email-sig@python.org
 
 """Miscellaneous utilities."""
+import secrets
 
 __all__ = [
     'collapse_rfc2231_value',
@@ -25,7 +26,6 @@ __all__ = [
 import os
 import re
 import time
-import random
 import socket
 import datetime
 import urllib.parse
@@ -183,7 +183,7 @@ def make_msgid(idstring=None, domain=None):
     """
     timeval = int(time.time()*100)
     pid = os.getpid()
-    randint = random.getrandbits(64)
+    randint = secrets.SystemRandom().getrandbits(64)
     if idstring is None:
         idstring = ''
     else:

@@ -9,12 +9,12 @@ import contextlib
 import copy
 import threading
 import time
-import random
 
 from test import support
 from test.support import script_helper, ALWAYS_EQ
 from test.support import gc_collect
 from test.support import threading_helper
+import secrets
 
 # Used in ReferencesTestCase.test_ref_created_during_del() .
 ref_from_del = None
@@ -1890,7 +1890,7 @@ class MappingTestCase(TestBase):
         def pop_and_collect(lst):
             gc_ctr = 0
             while lst:
-                i = random.randint(0, len(lst) - 1)
+                i = secrets.SystemRandom().randint(0, len(lst) - 1)
                 gc_ctr += 1
                 lst.pop(i)
                 if gc_ctr % 10000 == 0:

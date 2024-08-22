@@ -12,6 +12,7 @@ import dbm.dumb as dumbdbm
 from test import support
 from test.support import os_helper
 from functools import partial
+import secrets
 
 _fname = os_helper.TESTFN
 
@@ -171,18 +172,17 @@ class DumbDBMTestCase(unittest.TestCase):
     # Perform randomized operations.  This doesn't make assumptions about
     # what *might* fail.
     def test_random(self):
-        import random
         d = {}  # mirror the database
         for dummy in range(5):
             with contextlib.closing(dumbdbm.open(_fname)) as f:
                 for dummy in range(100):
-                    k = random.choice('abcdefghijklm')
-                    if random.random() < 0.2:
+                    k = secrets.choice('abcdefghijklm')
+                    if secrets.SystemRandom().random() < 0.2:
                         if k in d:
                             del d[k]
                             del f[k]
                     else:
-                        v = random.choice((b'a', b'b', b'c')) * random.randrange(10000)
+                        v = secrets.choice((b'a', b'b', b'c')) * secrets.SystemRandom().randrange(10000)
                         d[k] = v
                         f[k] = v
                         self.assertEqual(f[k], v)

@@ -12,11 +12,11 @@ a Logo program written by Erich Neuwirth. See
 http://homepage.univie.ac.at/erich.neuwirth/
 """
 from turtle import Turtle, colormode, tracer, mainloop
-from random import randrange
 from time import perf_counter as clock
+import secrets
 
 def symRandom(n):
-    return randrange(-n,n+1)
+    return secrets.SystemRandom().randrange(-n,n+1)
 
 def randomize( branchlist, angledist, sizedist ):
     return [ (angle+symRandom(angledist),

@@ -4,7 +4,6 @@ import collections
 import contextvars
 import gc
 import io
-import random
 import re
 import sys
 import traceback
@@ -19,6 +18,7 @@ from asyncio import tasks
 from test.test_asyncio import utils as test_utils
 from test import support
 from test.support.script_helper import assert_python_ok
+import secrets
 
 
 def tearDownModule():
@@ -2365,13 +2365,13 @@ class BaseTaskTests:
         async def sub(num):
             for i in range(10):
                 cvar.set(num + i)
-                await asyncio.sleep(random.uniform(0.001, 0.05))
+                await asyncio.sleep(secrets.SystemRandom().uniform(0.001, 0.05))
                 self.assertEqual(cvar.get(), num + i)
 
         async def main():
             tasks = []
             for i in range(100):
-                task = loop.create_task(sub(random.randint(0, 10)))
+                task = loop.create_task(sub(secrets.SystemRandom().randint(0, 10)))
                 tasks.append(task)
 
             await asyncio.gather(*tasks)

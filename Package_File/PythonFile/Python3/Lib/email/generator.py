@@ -3,13 +3,13 @@
 # Contact: email-sig@python.org
 
 """Classes to generate plain text from a message object tree."""
+import secrets
 
 __all__ = ['Generator', 'DecodedGenerator', 'BytesGenerator']
 
 import re
 import sys
 import time
-import random
 
 from copy import deepcopy
 from io import StringIO, BytesIO
@@ -373,7 +373,7 @@ class Generator:
     def _make_boundary(cls, text=None):
         # Craft a random boundary.  If text is given, ensure that the chosen
         # boundary doesn't appear in the text.
-        token = random.randrange(sys.maxsize)
+        token = secrets.SystemRandom().randrange(sys.maxsize)
         boundary = ('=' * 15) + (_fmt % token) + '=='
         if text is None:
             return boundary

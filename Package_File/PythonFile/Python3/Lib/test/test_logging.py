@@ -34,7 +34,6 @@ import gc
 import json
 import os
 import queue
-import random
 import re
 import shutil
 import socket
@@ -61,6 +60,7 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 from socketserver import (ThreadingUDPServer, DatagramRequestHandler,
                           ThreadingTCPServer, StreamRequestHandler)
+import secrets
 
 with warnings.catch_warnings():
     from . import smtpd
@@ -690,7 +690,7 @@ class HandlerTest(BaseTest):
                     self.deletion_time = time.time()
                 except OSError:
                     pass
-                time.sleep(0.004 * random.randint(0, 4))
+                time.sleep(0.004 * secrets.SystemRandom().randint(0, 4))
 
         del_count = 500
         log_count = 500

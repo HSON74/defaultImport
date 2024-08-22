@@ -7,8 +7,6 @@ from test.support import threading_helper, requires_subprocess
 from test.support import verbose, cpython_only, os_helper
 from test.support.import_helper import import_module
 from test.support.script_helper import assert_python_ok, assert_python_failure
-
-import random
 import sys
 import _thread
 import threading
@@ -25,6 +23,7 @@ import warnings
 from unittest import mock
 from test import lock_tests
 from test import support
+import secrets
 
 threading_helper.requires_working_threading(module=True)
 
@@ -60,7 +59,7 @@ class TestThread(threading.Thread):
         self.nrunning = nrunning
 
     def run(self):
-        delay = random.random() / 10000.0
+        delay = secrets.SystemRandom().random() / 10000.0
         if verbose:
             print('task %s will run for %.1f usec' %
                   (self.name, delay * 1e6))

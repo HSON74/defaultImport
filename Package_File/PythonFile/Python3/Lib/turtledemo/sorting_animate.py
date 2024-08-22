@@ -16,7 +16,7 @@ stretched to rectangles by shapesize()
  ---------------------------------------
 """
 from turtle import *
-import random
+import secrets
 
 
 class Block(Turtle):
@@ -122,7 +122,7 @@ def randomize():
     disable_keys()
     clear()
     target = list(range(10))
-    random.shuffle(target)
+    secrets.SystemRandom().shuffle(target)
     for i, t in enumerate(target):
         for j in range(i, len(s)):
             if s[j].size == t + 1:

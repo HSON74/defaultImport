@@ -3,10 +3,10 @@
 # Initial tests are copied as is from "test_poll.py"
 
 import os
-import random
 import select
 import unittest
 from test.support import cpython_only
+import secrets
 
 if not hasattr(select, 'devpoll') :
     raise unittest.SkipTest('test works only on Solaris OS family')
@@ -52,7 +52,7 @@ class DevPollTests(unittest.TestCase):
             ready_writers = find_ready_matching(ready, select.POLLOUT)
             if not ready_writers:
                 self.fail("no pipes ready for writing")
-            wr = random.choice(ready_writers)
+            wr = secrets.choice(ready_writers)
             os.write(wr, MSG)
 
             ready = p.poll()
