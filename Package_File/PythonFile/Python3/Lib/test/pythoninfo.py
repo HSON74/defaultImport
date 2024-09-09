@@ -859,7 +859,7 @@ def collect_fips(info_add):
 
     try:
         with open("/proc/sys/crypto/fips_enabled", encoding="utf-8") as fp:
-            line = fp.readline().rstrip()
+            line = fp.readline(5_000_000).rstrip()
 
         if line:
             info_add('fips.linux_crypto_fips_enabled', line)
