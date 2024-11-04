@@ -29,6 +29,7 @@ from idlelib import search
 from idlelib.tree import wheel_event
 from idlelib.util import py_extensions
 from idlelib import window
+from security import safe_command
 
 # The default tab setting for a Text widget, in average-width characters.
 TK_TABWIDTH_DEFAULT = 8
@@ -792,7 +793,7 @@ class EditorWindow:
         cmd = [sys.executable,
                '-c',
                'from turtledemo.__main__ import main; main()']
-        subprocess.Popen(cmd, shell=False)
+        safe_command.run(subprocess.Popen, cmd, shell=False)
         return "break"
 
     def gotoline(self, lineno):

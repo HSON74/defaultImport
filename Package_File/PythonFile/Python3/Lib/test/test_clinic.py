@@ -14,6 +14,7 @@ import os.path
 import subprocess
 import sys
 import unittest
+from security import safe_command
 
 test_tools.skip_if_missing('clinic')
 with test_tools.imports_under_tool('clinic'):
@@ -1371,8 +1372,7 @@ class ClinicExternalTest(TestCase):
     clinic_py = os.path.join(test_tools.toolsdir, "clinic", "clinic.py")
 
     def _do_test(self, *args, expect_success=True):
-        with subprocess.Popen(
-            [sys.executable, "-Xutf8", self.clinic_py, *args],
+        with safe_command.run(subprocess.Popen, [sys.executable, "-Xutf8", self.clinic_py, *args],
             encoding="utf-8",
             bufsize=0,
             stdout=subprocess.PIPE,

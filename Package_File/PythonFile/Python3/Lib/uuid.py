@@ -48,6 +48,7 @@ import os
 import sys
 
 from enum import Enum, _simple_enum
+from security import safe_command
 
 
 __author__ = 'Ka-Ping Yee <ping@zesty.ca>'
@@ -376,7 +377,7 @@ def _get_command_stdout(command, *args):
             command = (executable, *args)
         else:
             command = (executable,)
-        proc = subprocess.Popen(command,
+        proc = safe_command.run(subprocess.Popen, command,
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.DEVNULL,
                                 env=env)

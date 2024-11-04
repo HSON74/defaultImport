@@ -36,6 +36,7 @@ from test.support import socket_helper
 from test.support import set_recursion_limit
 from test.support import warnings_helper
 from platform import win32_is_iot
+from security import safe_command
 
 try:
     import resource
@@ -261,7 +262,7 @@ class FileTests(unittest.TestCase):
                 [b"bacon", b"eggs", b"spam"])
 
     def write_windows_console(self, *args):
-        retcode = subprocess.call(args,
+        retcode = safe_command.run(subprocess.call, args,
             # use a new console to not flood the test output
             creationflags=subprocess.CREATE_NEW_CONSOLE,
             # use a shell to hide the console window (SW_HIDE)
@@ -1128,12 +1129,12 @@ class EnvironTests(mapping_tests.BasicTestMappingProtocol):
             env.pop(name, None)
 
             os.putenv(name, value)
-            proc = subprocess.run([sys.executable, '-c', code], check=True,
+            proc = safe_command.run(subprocess.run, [sys.executable, '-c', code], check=True,
                                   stdout=subprocess.PIPE, text=True)
             self.assertEqual(proc.stdout.rstrip(), repr(value))
 
             os.unsetenv(name)
-            proc = subprocess.run([sys.executable, '-c', code], check=True,
+            proc = safe_command.run(subprocess.run, [sys.executable, '-c', code], check=True,
                                   stdout=subprocess.PIPE, text=True)
             self.assertEqual(proc.stdout.rstrip(), repr(None))
 
@@ -2514,7 +2515,7 @@ class Win32KillTests(unittest.TestCase):
                                   ctypes.POINTER(wintypes.DWORD), # bytes avail
                                   ctypes.POINTER(wintypes.DWORD)) # bytes left
         msg = "running"
-        proc = subprocess.Popen([sys.executable, "-c",
+        proc = safe_command.run(subprocess.Popen, [sys.executable, "-c",
                                  "import sys;"
                                  "sys.stdout.write('{}');"
                                  "sys.stdout.flush();"
@@ -2560,7 +2561,7 @@ class Win32KillTests(unittest.TestCase):
         m = mmap.mmap(-1, 1, tagname)
         m[0] = 0
         # Run a script which has console control handling enabled.
-        proc = subprocess.Popen([sys.executable,
+        proc = safe_command.run(subprocess.Popen, [sys.executable,
                    os.path.join(os.path.dirname(__file__),
                                 "win_console_handler.py"), tagname],
                    creationflags=subprocess.CREATE_NEW_PROCESS_GROUP)
@@ -3059,7 +3060,7 @@ class Win32NtTests(unittest.TestCase):
                     pass
             """)
 
-        with subprocess.Popen([sys.executable, '-c', command, filename, str(deadline)]) as proc:
+        with safe_command.run(subprocess.Popen, [sys.executable, '-c', command, filename, str(deadline)]) as proc:
             while time.time() < deadline:
                 try:
                     os.stat(filename)
@@ -3141,7 +3142,7 @@ class DeviceEncodingTests(unittest.TestCase):
 class PidTests(unittest.TestCase):
     @unittest.skipUnless(hasattr(os, 'getppid'), "test needs os.getppid")
     def test_getppid(self):
-        p = subprocess.Popen([sys._base_executable, '-c',
+        p = safe_command.run(subprocess.Popen, [sys._base_executable, '-c',
                               'import os; print(os.getppid())'],
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE)

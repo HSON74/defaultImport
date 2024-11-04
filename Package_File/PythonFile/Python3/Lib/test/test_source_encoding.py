@@ -9,6 +9,7 @@ import os
 import sys
 import subprocess
 import tempfile
+from security import safe_command
 
 class MiscSourceEncodingTest(unittest.TestCase):
 
@@ -66,7 +67,7 @@ class MiscSourceEncodingTest(unittest.TestCase):
 
     @requires_subprocess()
     def test_20731(self):
-        sub = subprocess.Popen([sys.executable,
+        sub = safe_command.run(subprocess.Popen, [sys.executable,
                         os.path.join(os.path.dirname(__file__),
                                      'coding20731.py')],
                         stderr=subprocess.PIPE)

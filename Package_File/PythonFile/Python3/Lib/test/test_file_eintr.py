@@ -16,6 +16,7 @@ import sys
 import time
 import unittest
 from test import support
+from security import safe_command
 
 if not support.has_subprocess_support:
     raise unittest.SkipTest("test module requires subprocess")
@@ -91,8 +92,7 @@ class TestFileIOSignalInterrupt:
         assert len(data_to_write) < 512, 'data_to_write must fit in pipe buf.'
 
         # Start a subprocess to call our read method while handling a signal.
-        self._process = subprocess.Popen(
-                [sys.executable, '-u', '-c',
+        self._process = safe_command.run(subprocess.Popen, [sys.executable, '-u', '-c',
                  'import signal, sys ;'
                  'signal.signal(signal.SIGINT, '
                                'lambda s, f: sys.stderr.write("$\\n")) ;'

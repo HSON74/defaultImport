@@ -8,6 +8,7 @@ import sys
 import traceback
 import unittest
 import warnings
+from security import safe_command
 
 
 MS_WINDOWS = (sys.platform == 'win32')
@@ -728,7 +729,7 @@ def collect_cc(info_add):
         args = CC.split()
     args.append('--version')
     try:
-        proc = subprocess.Popen(args,
+        proc = safe_command.run(subprocess.Popen, args,
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.STDOUT,
                                 universal_newlines=True)

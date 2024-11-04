@@ -12,6 +12,7 @@ from test.support.script_helper import (
     assert_python_ok,
 )
 from test.support.os_helper import temp_dir
+from security import safe_command
 
 
 if not support.has_subprocess_support:
@@ -57,8 +58,7 @@ class TestPerfTrampoline(unittest.TestCase):
                 """
         with temp_dir() as script_dir:
             script = make_script(script_dir, "perftest", code)
-            with subprocess.Popen(
-                [sys.executable, "-Xperf", script],
+            with safe_command.run(subprocess.Popen, [sys.executable, "-Xperf", script],
                 text=True,
                 stderr=subprocess.PIPE,
                 stdout=subprocess.PIPE,
@@ -112,8 +112,7 @@ class TestPerfTrampoline(unittest.TestCase):
                 """
         with temp_dir() as script_dir:
             script = make_script(script_dir, "perftest", code)
-            with subprocess.Popen(
-                [sys.executable, "-Xperf", script],
+            with safe_command.run(subprocess.Popen, [sys.executable, "-Xperf", script],
                 text=True,
                 stderr=subprocess.PIPE,
                 stdout=subprocess.PIPE,
@@ -161,8 +160,7 @@ class TestPerfTrampoline(unittest.TestCase):
                 """
         with temp_dir() as script_dir:
             script = make_script(script_dir, "perftest", code)
-            with subprocess.Popen(
-                [sys.executable, script],
+            with safe_command.run(subprocess.Popen, [sys.executable, script],
                 text=True,
                 stderr=subprocess.PIPE,
                 stdout=subprocess.PIPE,
@@ -262,8 +260,7 @@ def run_perf(cwd, *args, **env_vars):
         env = None
     output_file = cwd + "/perf_output.perf"
     base_cmd = ("perf", "record", "-g", "--call-graph=fp", "-o", output_file, "--")
-    proc = subprocess.run(
-        base_cmd + args,
+    proc = safe_command.run(subprocess.run, base_cmd + args,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         env=env,
@@ -273,8 +270,7 @@ def run_perf(cwd, *args, **env_vars):
         raise ValueError(f"Perf failed with return code {proc.returncode}")
 
     base_cmd = ("perf", "script")
-    proc = subprocess.run(
-        ("perf", "script", "-i", output_file),
+    proc = safe_command.run(subprocess.run, ("perf", "script", "-i", output_file),
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         env=env,
