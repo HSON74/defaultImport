@@ -3,10 +3,9 @@ import sys
 from test import support
 from test.test_grammar import (VALID_UNDERSCORE_LITERALS,
                                INVALID_UNDERSCORE_LITERALS)
-
-from random import random
 from math import atan2, isnan, copysign
 import operator
+import secrets
 
 INF = float("inf")
 NAN = float("nan")
@@ -105,8 +104,8 @@ class ComplexTest(unittest.TestCase):
 
         # Just for fun.
         for i in range(100):
-            self.check_div(complex(random(), random()),
-                           complex(random(), random()))
+            self.check_div(complex(secrets.SystemRandom().random(), secrets.SystemRandom().random()),
+                           complex(secrets.SystemRandom().random(), secrets.SystemRandom().random()))
 
         self.assertAlmostEqual(complex.__truediv__(2+0j, 1+1j), 1-1j)
 
@@ -299,7 +298,7 @@ class ComplexTest(unittest.TestCase):
 
     def test_boolcontext(self):
         for i in range(100):
-            self.assertTrue(complex(random() + 1e-6, random() + 1e-6))
+            self.assertTrue(complex(secrets.SystemRandom().random() + 1e-6, secrets.SystemRandom().random() + 1e-6))
         self.assertTrue(not complex(0.0, 0.0))
 
     def test_conjugate(self):

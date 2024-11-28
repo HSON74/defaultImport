@@ -9,7 +9,6 @@ import io
 import itertools
 import os
 import pickle
-import random
 import re
 import struct
 import sys
@@ -32,6 +31,7 @@ from datetime import timezone
 from datetime import UTC
 from datetime import date, datetime
 import time as _time
+import secrets
 
 try:
     import _testcapi
@@ -154,7 +154,7 @@ class PicklableFixedOffsetWithSlots(PicklableFixedOffset):
 
 class _TZInfo(tzinfo):
     def utcoffset(self, datetime_module):
-        return random.random()
+        return secrets.SystemRandom().random()
 
 class TestTZInfo(unittest.TestCase):
 
@@ -4615,7 +4615,7 @@ class TestDateTimeTZ(TestDateTime, TZInfoBase, unittest.TestCase):
         self.assertEqual(nowawareplus - nowaware, delta)
 
         # Make up a random timezone.
-        tzr = FixedOffset(random.randrange(-1439, 1440), "randomtimezone")
+        tzr = FixedOffset(secrets.SystemRandom().randrange(-1439, 1440), "randomtimezone")
         # Attach it to nowawareplus.
         nowawareplus = nowawareplus.replace(tzinfo=tzr)
         self.assertIs(nowawareplus.tzinfo, tzr)

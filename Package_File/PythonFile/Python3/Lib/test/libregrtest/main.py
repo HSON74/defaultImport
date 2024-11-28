@@ -2,7 +2,6 @@ import faulthandler
 import locale
 import os
 import platform
-import random
 import re
 import sys
 import sysconfig
@@ -21,6 +20,7 @@ from test import support
 from test.support import TestStats
 from test.support import os_helper
 from test.support import threading_helper
+import secrets
 
 
 # bpo-38203: Maximum delay in seconds to exit Python (call Py_Finalize()).
@@ -281,9 +281,9 @@ class Regrtest:
 
         if randomize:
             if ns.random_seed is None:
-                ns.random_seed = random.randrange(10000000)
-            random.seed(ns.random_seed)
-            random.shuffle(self.selected)
+                ns.random_seed = secrets.SystemRandom().randrange(10000000)
+            secrets.SystemRandom().seed(ns.random_seed)
+            secrets.SystemRandom().shuffle(self.selected)
 
     def list_tests(self):
         for name in self.selected:
@@ -770,7 +770,7 @@ class Regrtest:
         # Emscripten and WASI have stubbed getpid(), Emscripten has only
         # milisecond clock resolution. Use randint() instead.
         if sys.platform in {"emscripten", "wasi"}:
-            nounce = random.randint(0, 1_000_000)
+            nounce = secrets.SystemRandom().randint(0, 1_000_000)
         else:
             nounce = os.getpid()
 

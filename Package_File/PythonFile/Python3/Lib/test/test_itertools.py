@@ -7,7 +7,6 @@ import weakref
 from decimal import Decimal
 from fractions import Fraction
 import operator
-import random
 import copy
 import pickle
 from functools import reduce
@@ -16,6 +15,7 @@ import struct
 import threading
 import gc
 import warnings
+import secrets
 
 def pickle_deprecated(testfunc):
     """ Run the test three times.
@@ -1202,7 +1202,7 @@ class TestBasicOps(unittest.TestCase):
         argtypes = ['', 'abc', '', range(0), range(4), dict(a=1, b=2, c=3),
                     set('abcdefg'), range(11), tuple(range(13))]
         for i in range(100):
-            args = [random.choice(argtypes) for j in range(random.randrange(5))]
+            args = [secrets.choice(argtypes) for j in range(secrets.SystemRandom().randrange(5))]
             expected_len = prod(map(len, args))
             self.assertEqual(len(list(product(*args))), expected_len)
             self.assertEqual(list(product(*args)), list(product1(*args)))
@@ -1502,7 +1502,7 @@ class TestBasicOps(unittest.TestCase):
 
         for j in range(5):   # test randomly interleaved
             order = [0]*n + [1]*n
-            random.shuffle(order)
+            secrets.SystemRandom().shuffle(order)
             lists = ([], [])
             its = tee(irange(n))
             for i in order:

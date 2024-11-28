@@ -11,8 +11,8 @@ design pattern.
 
 
 import turtle
-import random
 import time
+import secrets
 
 SCREENWIDTH = 640
 SCREENHEIGHT = 480
@@ -28,7 +28,7 @@ HCOLOR = (255, 204, 204)
 COLOR = (204, 204, 255)
 
 def randomrow():
-    return random.randint(MINSTICKS, MAXSTICKS)
+    return secrets.SystemRandom().randint(MINSTICKS, MAXSTICKS)
 
 def computerzug(state):
     xored = state[0] ^ state[1] ^ state[2]
@@ -43,10 +43,10 @@ def computerzug(state):
 def randommove(state):
     m = max(state)
     while True:
-        z = random.randint(0,2)
+        z = secrets.SystemRandom().randint(0,2)
         if state[z] > (m > 1):
             break
-    rand = random.randint(m > 1, state[z]-1)
+    rand = secrets.SystemRandom().randint(m > 1, state[z]-1)
     return z, rand
 
 

@@ -17,6 +17,7 @@ import unittest
 import weakref
 from textwrap import dedent
 from http.cookies import SimpleCookie
+import secrets
 
 try:
     import _testbuffer
@@ -3084,8 +3085,6 @@ class AbstractPickleTests:
         check_array(arr[::2])
 
     def test_evil_class_mutating_dict(self):
-        # https://github.com/python/cpython/issues/92930
-        from random import getrandbits
 
         global Bad
         class Bad:
@@ -3094,7 +3093,7 @@ class AbstractPickleTests:
             def __hash__(self):
                 return 42
             def __reduce__(self):
-                if getrandbits(6) == 0:
+                if secrets.SystemRandom().getrandbits(6) == 0:
                     collection.clear()
                 return (Bad, ())
 

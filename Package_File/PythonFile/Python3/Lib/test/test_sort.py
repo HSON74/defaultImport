@@ -1,7 +1,7 @@
 from test import support
-import random
 import unittest
 from functools import cmp_to_key
+import secrets
 
 verbose = support.verbose
 nerrors = 0
@@ -55,7 +55,7 @@ class TestBase(unittest.TestCase):
                 self.i = i
 
             def __lt__(self, other):
-                if Complains.maybe_complain and random.random() < 0.001:
+                if Complains.maybe_complain and secrets.SystemRandom().random() < 0.001:
                     if verbose:
                         print("        complaining at", self, other)
                     raise RuntimeError
@@ -88,7 +88,7 @@ class TestBase(unittest.TestCase):
             check("reversed", x, s)
 
             s = x[:]
-            random.shuffle(s)
+            secrets.SystemRandom().shuffle(s)
             check("random permutation", x, s)
 
             y = x[:]
@@ -100,7 +100,7 @@ class TestBase(unittest.TestCase):
                 print("    Checking against an insane comparison function.")
                 print("        If the implementation isn't careful, this may segfault.")
             s = x[:]
-            s.sort(key=cmp_to_key(lambda a, b:  int(random.random() * 3) - 1))
+            s.sort(key=cmp_to_key(lambda a, b:  int(secrets.SystemRandom().random() * 3) - 1))
             check("an insane function left some permutation", x, s)
 
             if len(x) >= 2:
@@ -111,7 +111,7 @@ class TestBase(unittest.TestCase):
 
             x = [Complains(i) for i in x]
             s = x[:]
-            random.shuffle(s)
+            secrets.SystemRandom().shuffle(s)
             Complains.maybe_complain = True
             it_complained = False
             try:
@@ -122,7 +122,7 @@ class TestBase(unittest.TestCase):
                 Complains.maybe_complain = False
                 check("exception during sort left some permutation", x, s)
 
-            s = [Stable(random.randrange(10), i) for i in range(n)]
+            s = [Stable(secrets.SystemRandom().randrange(10), i) for i in range(n)]
             augmented = [(e, e.index) for e in s]
             augmented.sort()    # forced stable because ties broken by index
             x = [e for e, i in augmented] # a stable sort of s
@@ -139,11 +139,11 @@ class TestBugs(unittest.TestCase):
 
         class C:
             def __lt__(self, other):
-                if L and random.random() < 0.75:
+                if L and secrets.SystemRandom().random() < 0.75:
                     L.pop()
                 else:
                     L.append(3)
-                return random.random() < 0.5
+                return secrets.SystemRandom().random() < 0.5
 
         L = [C() for i in range(50)]
         self.assertRaises(ValueError, L.sort)
@@ -172,7 +172,7 @@ class TestDecorateSortUndecorate(unittest.TestCase):
     def test_decorated(self):
         data = 'The quick Brown fox Jumped over The lazy Dog'.split()
         copy = data[:]
-        random.shuffle(data)
+        secrets.SystemRandom().shuffle(data)
         data.sort(key=str.lower)
         def my_cmp(x, y):
             xlower, ylower = x.lower(), y.lower()
@@ -184,7 +184,7 @@ class TestDecorateSortUndecorate(unittest.TestCase):
         self.assertRaises(TypeError, data.sort, key=lambda x,y: 0)
 
     def test_stability(self):
-        data = [(random.randrange(100), i) for i in range(200)]
+        data = [(secrets.SystemRandom().randrange(100), i) for i in range(200)]
         copy = data[:]
         data.sort(key=lambda t: t[0])   # sort on the random first field
         copy.sort()                     # sort using both fields
@@ -239,12 +239,12 @@ class TestDecorateSortUndecorate(unittest.TestCase):
 
     def test_reverse(self):
         data = list(range(100))
-        random.shuffle(data)
+        secrets.SystemRandom().shuffle(data)
         data.sort(reverse=True)
         self.assertEqual(data, list(range(99,-1,-1)))
 
     def test_reverse_stability(self):
-        data = [(random.randrange(100), i) for i in range(200)]
+        data = [(secrets.SystemRandom().randrange(100), i) for i in range(200)]
         copy1 = data[:]
         copy2 = data[:]
         def my_cmp(x, y):
@@ -276,8 +276,8 @@ def check_against_PyObject_RichCompareBool(self, L):
     ##                        2. [(x,) for x in L]
     ##                        3. [((x,),) for x in L]
 
-    random.seed(0)
-    random.shuffle(L)
+    secrets.SystemRandom().seed(0)
+    secrets.SystemRandom().shuffle(L)
     L_1 = L[:]
     L_2 = [(x,) for x in L]
     L_3 = [((x,),) for x in L]

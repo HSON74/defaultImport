@@ -16,7 +16,6 @@ import os
 import pickle
 import platform
 import queue
-import random
 import re
 import select
 import signal
@@ -29,6 +28,8 @@ import threading
 import time
 import traceback
 from weakref import proxy
+import secrets
+
 try:
     import multiprocessing
 except ImportError:
@@ -6184,7 +6185,7 @@ class SendfileUsingSendTest(ThreadedTCPSocketTest):
             if total:
                 yield total
 
-        chunk = b"".join([random.choice(string.ascii_letters).encode()
+        chunk = b"".join([secrets.choice(string.ascii_letters).encode()
                           for i in range(cls.BUFSIZE)])
         with open(os_helper.TESTFN, 'wb') as f:
             for csize in chunks(cls.FILESIZE, cls.BUFSIZE):

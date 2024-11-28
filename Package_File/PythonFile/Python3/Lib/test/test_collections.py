@@ -6,7 +6,6 @@ import doctest
 import inspect
 import operator
 import pickle
-from random import choice, randrange
 from itertools import product, chain, combinations
 import string
 import sys
@@ -26,6 +25,7 @@ from collections.abc import Set, MutableSet
 from collections.abc import Mapping, MutableMapping, KeysView, ItemsView, ValuesView
 from collections.abc import Sequence, MutableSequence
 from collections.abc import ByteString, Buffer
+import secrets
 
 
 class TestUserObjects(unittest.TestCase):
@@ -546,7 +546,7 @@ class TestNamedTuple(unittest.TestCase):
         self.assertEqual(Dot(1)._fields, ('d',))
 
         n = support.EXCEEDS_RECURSION_LIMIT
-        names = list(set(''.join([choice(string.ascii_letters)
+        names = list(set(''.join([secrets.choice(string.ascii_letters)
                                   for j in range(10)]) for i in range(n)))
         n = len(names)
         Big = namedtuple('Big', names)
@@ -2255,9 +2255,9 @@ class TestCounter(unittest.TestCase):
         elements = 'abcd'
         for i in range(1000):
             # test random pairs of multisets
-            p = Counter(dict((elem, randrange(-2,4)) for elem in elements))
+            p = Counter(dict((elem, secrets.SystemRandom().randrange(-2,4)) for elem in elements))
             p.update(e=1, f=-1, g=0)
-            q = Counter(dict((elem, randrange(-2,4)) for elem in elements))
+            q = Counter(dict((elem, secrets.SystemRandom().randrange(-2,4)) for elem in elements))
             q.update(h=1, i=-1, j=0)
             for counterop, numberop in [
                 (Counter.__add__, lambda x, y: max(0, x+y)),
@@ -2275,8 +2275,8 @@ class TestCounter(unittest.TestCase):
         elements = 'abcdef'
         for i in range(100):
             # verify that random multisets with no repeats are exactly like sets
-            p = Counter(dict((elem, randrange(0, 2)) for elem in elements))
-            q = Counter(dict((elem, randrange(0, 2)) for elem in elements))
+            p = Counter(dict((elem, secrets.SystemRandom().randrange(0, 2)) for elem in elements))
+            q = Counter(dict((elem, secrets.SystemRandom().randrange(0, 2)) for elem in elements))
             for counterop, setop in [
                 (Counter.__sub__, set.__sub__),
                 (Counter.__or__, set.__or__),
@@ -2290,9 +2290,9 @@ class TestCounter(unittest.TestCase):
         elements = 'abcd'
         for i in range(1000):
             # test random pairs of multisets
-            p = Counter(dict((elem, randrange(-2,4)) for elem in elements))
+            p = Counter(dict((elem, secrets.SystemRandom().randrange(-2,4)) for elem in elements))
             p.update(e=1, f=-1, g=0)
-            q = Counter(dict((elem, randrange(-2,4)) for elem in elements))
+            q = Counter(dict((elem, secrets.SystemRandom().randrange(-2,4)) for elem in elements))
             q.update(h=1, i=-1, j=0)
             for inplace_op, regular_op in [
                 (Counter.__iadd__, Counter.__add__),

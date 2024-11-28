@@ -2,10 +2,9 @@ import unittest
 from test import support
 
 import sys
-
-import random
 import math
 import array
+import secrets
 
 # SHIFT should match the value in longintrepr.h for best testing.
 SHIFT = sys.int_info.bits_per_digit
@@ -126,7 +125,7 @@ class LongTest(unittest.TestCase):
         nbits_lo = nbits_hi - SHIFT + 1
         answer = 0
         nbits = 0
-        r = int(random.random() * (SHIFT * 2)) | 1  # force 1 bits to start
+        r = int(secrets.SystemRandom().random() * (SHIFT * 2)) | 1  # force 1 bits to start
         while nbits < nbits_lo:
             bits = (r >> 1) + 1
             bits = min(bits, nbits_hi - nbits)
@@ -135,9 +134,9 @@ class LongTest(unittest.TestCase):
             answer = answer << bits
             if r & 1:
                 answer = answer | ((1 << bits) - 1)
-            r = int(random.random() * (SHIFT * 2))
+            r = int(secrets.SystemRandom().random() * (SHIFT * 2))
         self.assertTrue(nbits_lo <= nbits <= nbits_hi)
-        if random.random() < 0.5:
+        if secrets.SystemRandom().random() < 0.5:
             answer = -answer
         return answer
 
@@ -147,8 +146,8 @@ class LongTest(unittest.TestCase):
     def getran2(ndigits):
         answer = 0
         for i in range(ndigits):
-            answer = (answer << SHIFT) | random.randint(0, MASK)
-        if random.random() < 0.5:
+            answer = (answer << SHIFT) | secrets.SystemRandom().randint(0, MASK)
+        if secrets.SystemRandom().random() < 0.5:
             answer = -answer
         return answer
 
@@ -896,8 +895,8 @@ class LongTest(unittest.TestCase):
         # if the least significant bit of q=ans*2**53 is zero.
         for M in [10**10, 10**100, 10**1000]:
             for i in range(1000):
-                a = random.randrange(1, M)
-                b = random.randrange(a, 2*a+1)
+                a = secrets.SystemRandom().randrange(1, M)
+                b = secrets.SystemRandom().randrange(a, 2*a+1)
                 self.check_truediv(a, b)
                 self.check_truediv(-a, b)
                 self.check_truediv(a, -b)
@@ -905,10 +904,10 @@ class LongTest(unittest.TestCase):
 
         # and some (genuinely) random tests
         for _ in range(10000):
-            a_bits = random.randrange(1000)
-            b_bits = random.randrange(1, 1000)
-            x = random.randrange(2**a_bits)
-            y = random.randrange(1, 2**b_bits)
+            a_bits = secrets.SystemRandom().randrange(1000)
+            b_bits = secrets.SystemRandom().randrange(1, 1000)
+            x = secrets.SystemRandom().randrange(2**a_bits)
+            y = secrets.SystemRandom().randrange(1, 2**b_bits)
             self.check_truediv(x, y)
             self.check_truediv(x, -y)
             self.check_truediv(-x, y)
@@ -1188,7 +1187,7 @@ class LongTest(unittest.TestCase):
         # nonnegative second argument: round(x, n) should just return x
         for n in range(5):
             for i in range(100):
-                x = random.randrange(-10000, 10000)
+                x = secrets.SystemRandom().randrange(-10000, 10000)
                 got = round(x, n)
                 self.assertEqual(got, x)
                 self.assertIs(type(got), int)
@@ -1197,7 +1196,7 @@ class LongTest(unittest.TestCase):
 
         # omitted second argument
         for i in range(100):
-            x = random.randrange(-10000, 10000)
+            x = secrets.SystemRandom().randrange(-10000, 10000)
             got = round(x)
             self.assertEqual(got, x)
             self.assertIs(type(got), int)

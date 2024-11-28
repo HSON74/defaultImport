@@ -6,11 +6,11 @@ import weakref
 import operator
 import copy
 import pickle
-from random import randrange, shuffle
 import warnings
 import collections
 import collections.abc
 import itertools
+import secrets
 
 class PassThru(Exception):
     pass
@@ -699,10 +699,10 @@ class TestFrozenSet(TestJointOps, unittest.TestCase):
 
         # make sure that all permutations give the same hash value
         n = 100
-        seq = [randrange(n) for i in range(n)]
+        seq = [secrets.SystemRandom().randrange(n) for i in range(n)]
         results = set()
         for i in range(200):
-            shuffle(seq)
+            secrets.SystemRandom().shuffle(seq)
             results.add(hash(self.thetype(seq)))
         self.assertEqual(len(results), 1)
 
@@ -1841,17 +1841,17 @@ class TestOperationsMutating:
             def __eq__(self, other):
                 if not enabled:
                     return False
-                if randrange(20) == 0:
+                if secrets.SystemRandom().randrange(20) == 0:
                     set1.clear()
-                if randrange(20) == 0:
+                if secrets.SystemRandom().randrange(20) == 0:
                     set2.clear()
-                return bool(randrange(2))
+                return bool(secrets.SystemRandom().randrange(2))
             def __hash__(self):
-                return randrange(2)
+                return secrets.SystemRandom().randrange(2)
         # Don't behave poorly during construction.
         enabled = False
-        set1 = self.constructor1(Bad() for _ in range(randrange(50)))
-        set2 = self.constructor2(Bad() for _ in range(randrange(50)))
+        set1 = self.constructor1(Bad() for _ in range(secrets.SystemRandom().randrange(50)))
+        set2 = self.constructor2(Bad() for _ in range(secrets.SystemRandom().randrange(50)))
         # Now start behaving poorly
         enabled = True
         return set1, set2

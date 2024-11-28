@@ -2,6 +2,7 @@ import sys
 import unittest
 from test.support import import_helper
 from collections import UserList
+import secrets
 
 
 py_bisect = import_helper.import_fresh_module('bisect', blocked=['_bisect'])
@@ -153,11 +154,10 @@ class TestBisect:
         self.assertEqual(data.last_insert, (x + 1, x))
 
     def test_random(self, n=25):
-        from random import randrange
         for i in range(n):
-            data = [randrange(0, n, 2) for j in range(i)]
+            data = [secrets.SystemRandom().randrange(0, n, 2) for j in range(i)]
             data.sort()
-            elem = randrange(-1, n+1)
+            elem = secrets.SystemRandom().randrange(-1, n+1)
             ip = self.module.bisect_left(data, elem)
             if ip < len(data):
                 self.assertTrue(elem <= data[ip])
@@ -234,14 +234,13 @@ class TestBisect:
             )
 
     def test_insort(self):
-        from random import shuffle
         mod = self.module
 
         # Invariant:  As random elements are inserted in
         # a target list, the targetlist remains sorted.
         keyfunc = abs
         data = list(range(-10, 11)) + list(range(-20, 20, 2))
-        shuffle(data)
+        secrets.SystemRandom().shuffle(data)
         target = []
         for x in data:
             mod.insort_left(target, x, key=keyfunc)
@@ -301,10 +300,9 @@ class TestBisectC(TestBisect, unittest.TestCase):
 
 class TestInsort:
     def test_vsBuiltinSort(self, n=500):
-        from random import choice
         for insorted in (list(), UserList()):
             for i in range(n):
-                digit = choice("0123456789")
+                digit = secrets.choice("0123456789")
                 if digit in "02468":
                     f = self.module.insort_left
                 else:
