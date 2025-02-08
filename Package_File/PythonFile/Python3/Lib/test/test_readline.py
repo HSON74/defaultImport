@@ -14,6 +14,7 @@ from test.support import verbose
 from test.support.import_helper import import_module
 from test.support.os_helper import unlink, temp_dir, TESTFN
 from test.support.script_helper import assert_python_ok
+from security import safe_command
 
 # Skip tests if there is no readline module
 readline = import_module('readline')
@@ -309,7 +310,7 @@ def run_pty(script, input=b"dummy input\r", env=None):
     output = bytearray()
     [master, slave] = pty.openpty()
     args = (sys.executable, '-c', script)
-    proc = subprocess.Popen(args, stdin=slave, stdout=slave, stderr=slave, env=env)
+    proc = safe_command.run(subprocess.Popen, args, stdin=slave, stdout=slave, stderr=slave, env=env)
     os.close(slave)
     with ExitStack() as cleanup:
         cleanup.enter_context(proc)

@@ -4,6 +4,7 @@ import sys, io, subprocess
 import quopri
 
 from test import support
+from security import safe_command
 
 
 ENCSAMPLE = b"""\
@@ -184,7 +185,7 @@ zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz''')
     @support.requires_subprocess()
     def test_scriptencode(self):
         (p, e) = self.STRINGS[-1]
-        process = subprocess.Popen([sys.executable, "-mquopri"],
+        process = safe_command.run(subprocess.Popen, [sys.executable, "-mquopri"],
                                    stdin=subprocess.PIPE, stdout=subprocess.PIPE)
         self.addCleanup(process.stdout.close)
         cout, cerr = process.communicate(p)
@@ -201,7 +202,7 @@ zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz''')
     @support.requires_subprocess()
     def test_scriptdecode(self):
         (p, e) = self.STRINGS[-1]
-        process = subprocess.Popen([sys.executable, "-mquopri", "-d"],
+        process = safe_command.run(subprocess.Popen, [sys.executable, "-mquopri", "-d"],
                                    stdin=subprocess.PIPE, stdout=subprocess.PIPE)
         self.addCleanup(process.stdout.close)
         cout, cerr = process.communicate(e)

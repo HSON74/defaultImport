@@ -23,6 +23,7 @@ from test.libregrtest.runtest import (
     MatchTests, RunTests)
 from test.libregrtest.setup import setup_tests
 from test.libregrtest.utils import format_duration, print_warning
+from security import safe_command
 
 if sys.platform == 'win32':
     import locale
@@ -119,7 +120,7 @@ def run_test_in_subprocess(worker_job: WorkerJob,
     )
     if USE_PROCESS_GROUP:
         kw['start_new_session'] = True
-    return subprocess.Popen(cmd, **kw)
+    return safe_command.run(subprocess.Popen, cmd, **kw)
 
 
 def run_tests_worker(worker_json: str) -> NoReturn:

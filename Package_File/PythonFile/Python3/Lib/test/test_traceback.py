@@ -26,6 +26,7 @@ import textwrap
 import traceback
 from functools import partial
 from pathlib import Path
+from security import safe_command
 
 MODULE_PREFIX = f'{__name__}.' if __name__ == '__main__' else ''
 
@@ -225,7 +226,7 @@ class TracebackCases(unittest.TestCase):
         # The spawned subprocess has its stdout redirected to a PIPE, and its
         # encoding may be different from the current interpreter, on Windows
         # at least.
-        process = subprocess.Popen([sys.executable, "-c",
+        process = safe_command.run(subprocess.Popen, [sys.executable, "-c",
                                     "import sys; print(sys.stdout.encoding)"],
                                    stdout=subprocess.PIPE,
                                    stderr=subprocess.STDOUT)
@@ -241,7 +242,7 @@ class TracebackCases(unittest.TestCase):
                         raise RuntimeError('{1}')
                         """.format(firstlines, message))
 
-                process = subprocess.Popen([sys.executable, TESTFN],
+                process = safe_command.run(subprocess.Popen, [sys.executable, TESTFN],
                     stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
                 stdout, stderr = process.communicate()
                 stdout = stdout.decode(output_encoding).splitlines()

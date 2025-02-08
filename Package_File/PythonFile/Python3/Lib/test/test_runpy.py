@@ -20,6 +20,8 @@ from test.support.script_helper import make_script, make_zip_script
 
 import runpy
 from runpy import _run_code, _run_module_code, run_module, run_path
+from security import safe_command
+
 # Note: This module can't safely test _run_module_as_main as it
 # runs its tests in the current process, which would mess with the
 # real __main__ module (usually test.regrtest)
@@ -785,7 +787,7 @@ class TestExit(unittest.TestCase):
     def assertSigInt(self, cmd, *args, **kwargs):
         # Use -E to ignore PYTHONSAFEPATH
         cmd = [sys.executable, '-E', *cmd]
-        proc = subprocess.run(cmd, *args, **kwargs, text=True, stderr=subprocess.PIPE)
+        proc = safe_command.run(subprocess.run, cmd, *args, **kwargs, text=True, stderr=subprocess.PIPE)
         self.assertTrue(proc.stderr.endswith("\nKeyboardInterrupt\n"), proc.stderr)
         self.assertEqual(proc.returncode, self.EXPECTED_CODE)
 

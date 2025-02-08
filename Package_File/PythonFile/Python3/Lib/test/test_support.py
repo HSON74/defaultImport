@@ -18,6 +18,7 @@ from test.support import os_helper
 from test.support import script_helper
 from test.support import socket_helper
 from test.support import warnings_helper
+from security import safe_command
 
 TESTFN = os_helper.TESTFN
 
@@ -490,7 +491,7 @@ class TestSupport(unittest.TestCase):
         cmd = [sys.executable, *args, '-c', code]
         env = {key: value for key, value in os.environ.items()
                if not key.startswith('PYTHON')}
-        proc = subprocess.run(cmd,
+        proc = safe_command.run(subprocess.run, cmd,
                               stdout=subprocess.PIPE,
                               stderr=subprocess.DEVNULL,
                               universal_newlines=True,
