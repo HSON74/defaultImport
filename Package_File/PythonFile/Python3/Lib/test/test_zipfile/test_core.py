@@ -16,7 +16,6 @@ import zipfile
 
 
 from tempfile import TemporaryFile
-from random import randint, random, randbytes
 
 from test.support import script_helper
 from test.support import (
@@ -26,6 +25,7 @@ from test.support import (
 from test.support.os_helper import (
     TESTFN, unlink, rmtree, temp_dir, temp_cwd, fd_count
 )
+import secrets
 
 
 TESTFN2 = TESTFN + "2"
@@ -51,7 +51,7 @@ class AbstractTestsWithSourceFile:
     @classmethod
     def setUpClass(cls):
         cls.line_gen = [bytes("Zipfile test line %d. random float: %f\n" %
-                              (i, random()), "ascii")
+                              (i, secrets.SystemRandom().random()), "ascii")
                         for i in range(FIXEDTEST_SIZE)]
         cls.data = b''.join(cls.line_gen)
 
@@ -172,7 +172,7 @@ class AbstractTestsWithSourceFile:
             zipdata1 = []
             with zipfp.open(TESTFN) as zipopen1:
                 while True:
-                    read_data = zipopen1.read(randint(1, 1024))
+                    read_data = zipopen1.read(secrets.SystemRandom().randint(1, 1024))
                     if not read_data:
                         break
                     zipdata1.append(read_data)
@@ -327,7 +327,7 @@ class AbstractTestsWithSourceFile:
         # than requested.
         for test_size in (1, 4095, 4096, 4097, 16384):
             file_size = test_size + 1
-            junk = randbytes(file_size)
+            junk = secrets.SystemRandom().randbytes(file_size)
             with zipfile.ZipFile(io.BytesIO(), "w", self.compression) as zipf:
                 zipf.writestr('foo', junk)
                 with zipf.open('foo', 'r') as fp:
@@ -2456,8 +2456,8 @@ class DecryptionTests(unittest.TestCase):
 class AbstractTestsWithRandomBinaryFiles:
     @classmethod
     def setUpClass(cls):
-        datacount = randint(16, 64)*1024 + randint(1, 1024)
-        cls.data = b''.join(struct.pack('<f', random()*randint(-1000, 1000))
+        datacount = secrets.SystemRandom().randint(16, 64)*1024 + secrets.SystemRandom().randint(1, 1024)
+        cls.data = b''.join(struct.pack('<f', secrets.SystemRandom().random()*secrets.SystemRandom().randint(-1000, 1000))
                             for i in range(datacount))
 
     def setUp(self):
@@ -2530,7 +2530,7 @@ class AbstractTestsWithRandomBinaryFiles:
             zipdata1 = []
             with zipfp.open(TESTFN) as zipopen1:
                 while True:
-                    read_data = zipopen1.read(randint(1, 1024))
+                    read_data = zipopen1.read(secrets.SystemRandom().randint(1, 1024))
                     if not read_data:
                         break
                     zipdata1.append(read_data)
@@ -2650,8 +2650,8 @@ class UnseekableTests(unittest.TestCase):
 class TestsWithMultipleOpens(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.data1 = b'111' + randbytes(10000)
-        cls.data2 = b'222' + randbytes(10000)
+        cls.data1 = b'111' + secrets.SystemRandom().randbytes(10000)
+        cls.data2 = b'222' + secrets.SystemRandom().randbytes(10000)
 
     def make_test_archive(self, f):
         # Create the ZIP archive

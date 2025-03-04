@@ -10,7 +10,6 @@ import textwrap
 
 from io import StringIO, BytesIO
 from itertools import chain
-from random import choice
 from threading import Thread
 from unittest.mock import patch
 
@@ -46,6 +45,7 @@ from test.test_email import openfile, TestEmailBase
 # These imports are documented to work, but we are testing them using a
 # different path, so we import them here just to make sure they are importable.
 from email.parser import FeedParser
+import secrets
 
 NL = '\n'
 EMPTYSTRING = ''
@@ -3629,7 +3629,7 @@ Do you like this message?
         chunksize = 5
         chars = 'abcd \t\r\n'
 
-        s = ''.join(choice(chars) for i in range(n)) + '\n'
+        s = ''.join(secrets.choice(chars) for i in range(n)) + '\n'
         target = s.splitlines(True)
 
         bsf = BufferedSubFile()

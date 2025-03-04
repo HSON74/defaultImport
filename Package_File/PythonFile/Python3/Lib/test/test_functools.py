@@ -5,7 +5,6 @@ import collections.abc
 import copy
 from itertools import permutations
 import pickle
-from random import choice
 import sys
 from test import support
 import threading
@@ -23,6 +22,7 @@ from test.support import import_helper
 from test.support import threading_helper
 
 import functools
+import secrets
 
 py_functools = import_helper.import_fresh_module('functools',
                                                  blocked=['_functools'])
@@ -1302,7 +1302,7 @@ class TestLRU:
 
         domain = range(5)
         for i in range(1000):
-            x, y = choice(domain), choice(domain)
+            x, y = secrets.choice(domain), secrets.choice(domain)
             actual = f(x, y)
             expected = orig(x, y)
             self.assertEqual(actual, expected)

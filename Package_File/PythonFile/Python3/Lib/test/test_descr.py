@@ -4,7 +4,6 @@ import gc
 import itertools
 import math
 import pickle
-import random
 import string
 import sys
 import types
@@ -15,6 +14,7 @@ import weakref
 from copy import deepcopy
 from contextlib import redirect_stdout
 from test import support
+import secrets
 
 try:
     import _testcapi
@@ -857,7 +857,7 @@ class ClassPropertiesAndMethods(unittest.TestCase):
 
         # Issue 34805: Verify that definition order is retained
         def random_name():
-            return ''.join(random.choices(string.ascii_letters, k=10))
+            return ''.join(secrets.SystemRandom().choices(string.ascii_letters, k=10))
         class A:
             pass
         subclasses = [type(random_name(), (A,), {}) for i in range(100)]

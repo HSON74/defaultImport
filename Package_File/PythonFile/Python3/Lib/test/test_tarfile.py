@@ -3,7 +3,6 @@ import os
 import io
 from hashlib import sha256
 from contextlib import contextmanager, ExitStack
-from random import Random
 import pathlib
 import shutil
 import re
@@ -18,6 +17,7 @@ from test import support
 from test.support import os_helper
 from test.support import script_helper
 from test.support import warnings_helper
+import secrets
 
 # Check for our compression modules.
 try:
@@ -435,7 +435,7 @@ class CommonReadTest(ReadTest):
     def test_ignore_zeros(self):
         # Test TarFile's ignore_zeros option.
         # generate 512 pseudorandom bytes
-        data = Random(0).randbytes(512)
+        data = secrets.SystemRandom().Random(0).randbytes(512)
         for char in (b'\0', b'a'):
             # Test if EOFHeaderError ('\0') and InvalidHeaderError ('a')
             # are ignored correctly.

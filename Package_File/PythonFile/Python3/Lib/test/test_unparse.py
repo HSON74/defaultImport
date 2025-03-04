@@ -3,10 +3,10 @@
 import unittest
 import test.support
 import pathlib
-import random
 import tokenize
 import ast
 from test.support.ast_helper import ASTTestMixin
+import secrets
 
 
 def read_pyfile(filename):
@@ -753,7 +753,7 @@ class DirectoryTestCase(ASTTestCase):
             tests_to_run_always = {item for item in items if
                                    item.name in cls.run_always_files}
 
-            items = set(random.sample(items, 10))
+            items = set(secrets.SystemRandom().sample(items, 10))
 
             # Make sure that at least tests that heavily use grammar features are
             # always considered in order to reduce the chance of missing something.

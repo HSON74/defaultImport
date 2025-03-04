@@ -11,6 +11,7 @@ import random
 import marshal
 import tempfile
 import os
+import secrets
 
 td = tempfile.gettempdir()
 
@@ -44,7 +45,7 @@ def randfloats(n):
         fp.close()
         # Shuffle it a bit...
         for i in range(10):
-            i = random.randrange(n)
+            i = secrets.SystemRandom().randrange(n)
             temp = result[:i]
             del result[:i]
             temp.reverse()
@@ -97,19 +98,19 @@ def tabulate(r):
 
         # Do 3 random exchanges.
         for dummy in range(3):
-            i1 = random.randrange(n)
-            i2 = random.randrange(n)
+            i1 = secrets.SystemRandom().randrange(n)
+            i2 = secrets.SystemRandom().randrange(n)
             L[i1], L[i2] = L[i2], L[i1]
         doit(L) # 3sort
 
         # Replace the last 10 with random floats.
         if n >= 10:
-            L[-10:] = [random.random() for dummy in range(10)]
+            L[-10:] = [secrets.SystemRandom().random() for dummy in range(10)]
         doit(L) # +sort
 
         # Replace 1% of the elements at random.
         for dummy in range(n // 100):
-            L[random.randrange(n)] = random.random()
+            L[secrets.SystemRandom().randrange(n)] = secrets.SystemRandom().random()
         doit(L) # %sort
 
         # Arrange for lots of duplicates.
@@ -161,7 +162,7 @@ def main():
                 x = 1
                 for a in sys.argv[3:]:
                     x = 69069 * x + hash(a)
-                random.seed(x)
+                secrets.SystemRandom().seed(x)
     r = range(k1, k2+1)                 # include the end point
     tabulate(r)
 

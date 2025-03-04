@@ -13,7 +13,6 @@ import math
 import os
 import pickle
 import platform
-import random
 import re
 import sys
 import traceback
@@ -35,6 +34,8 @@ from test.support.script_helper import assert_python_ok
 from test.support.warnings_helper import check_warnings
 from test.support import requires_IEEE_754
 from unittest.mock import MagicMock, patch
+import secrets
+
 try:
     import pty, signal
 except ImportError:
@@ -1207,8 +1208,8 @@ class BuiltinTest(unittest.TestCase):
 
         self.assertEqual(max((1, 2), key=None), 2)
 
-        data = [random.randrange(200) for i in range(100)]
-        keys = dict((elem, random.randrange(50)) for elem in data)
+        data = [secrets.SystemRandom().randrange(200) for i in range(100)]
+        keys = dict((elem, secrets.SystemRandom().randrange(50)) for elem in data)
         f = keys.__getitem__
         self.assertEqual(max(data, key=f),
                          sorted(reversed(data), key=f)[-1])
@@ -1270,8 +1271,8 @@ class BuiltinTest(unittest.TestCase):
 
         self.assertEqual(min((1, 2), key=None), 1)
 
-        data = [random.randrange(200) for i in range(100)]
-        keys = dict((elem, random.randrange(50)) for elem in data)
+        data = [secrets.SystemRandom().randrange(200) for i in range(100)]
+        keys = dict((elem, secrets.SystemRandom().randrange(50)) for elem in data)
         f = keys.__getitem__
         self.assertEqual(min(data, key=f),
                          sorted(data, key=f)[0])
@@ -2300,15 +2301,15 @@ class TestSorted(unittest.TestCase):
     def test_basic(self):
         data = list(range(100))
         copy = data[:]
-        random.shuffle(copy)
+        secrets.SystemRandom().shuffle(copy)
         self.assertEqual(data, sorted(copy))
         self.assertNotEqual(data, copy)
 
         data.reverse()
-        random.shuffle(copy)
+        secrets.SystemRandom().shuffle(copy)
         self.assertEqual(data, sorted(copy, key=lambda x: -x))
         self.assertNotEqual(data, copy)
-        random.shuffle(copy)
+        secrets.SystemRandom().shuffle(copy)
         self.assertEqual(data, sorted(copy, reverse=True))
         self.assertNotEqual(data, copy)
 

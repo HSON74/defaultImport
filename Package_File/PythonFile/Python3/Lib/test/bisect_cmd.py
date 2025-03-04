@@ -21,11 +21,11 @@ import argparse
 import datetime
 import os.path
 import math
-import random
 import subprocess
 import sys
 import tempfile
 import time
+import secrets
 
 
 def write_tests(filename, tests):
@@ -135,7 +135,7 @@ def main():
         while len(tests) > args.max_tests and iteration <= args.max_iter:
             ntest = len(tests)
             ntest = max(ntest // 2, 1)
-            subtests = random.sample(tests, ntest)
+            subtests = secrets.SystemRandom().sample(tests, ntest)
 
             print("[+] Iteration %s: run %s tests/%s"
                   % (iteration, len(subtests), len(tests)))

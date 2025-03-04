@@ -1,13 +1,13 @@
 # test interactions between int, float, Decimal and Fraction
 
 import unittest
-import random
 import math
 import sys
 import operator
 
 from decimal import Decimal as D
 from fractions import Fraction as F
+import secrets
 
 # Constants related to the hash implementation;  hash(x) is based
 # on the reduction of x modulo the prime _PyHASH_MODULUS.
@@ -77,8 +77,8 @@ class HashTest(unittest.TestCase):
 
         # random values of various sizes
         for _ in range(1000):
-            e = random.randrange(300)
-            n = random.randrange(-10**e, 10**e)
+            e = secrets.SystemRandom().randrange(300)
+            n = secrets.SystemRandom().randrange(-10**e, 10**e)
             self.check_equal_hash(n, D(n))
             self.check_equal_hash(n, F(n))
             if n == int(float(n)):
@@ -101,7 +101,7 @@ class HashTest(unittest.TestCase):
         self.check_equal_hash(float('-inf'), D('-inf'))
 
         for _ in range(1000):
-            x = random.random() * math.exp(random.random()*200.0 - 100.0)
+            x = secrets.SystemRandom().random() * math.exp(secrets.SystemRandom().random()*200.0 - 100.0)
             self.check_equal_hash(x, D.from_float(x))
             self.check_equal_hash(x, F.from_float(x))
 

@@ -1,7 +1,6 @@
 import fractions
 import operator
 import os
-import random
 import sys
 import struct
 import time
@@ -12,6 +11,7 @@ from test.test_grammar import (VALID_UNDERSCORE_LITERALS,
                                INVALID_UNDERSCORE_LITERALS)
 from math import isinf, isnan, copysign, ldexp
 import math
+import secrets
 
 try:
     import _testcapi
@@ -294,8 +294,8 @@ class GeneralFloatCases(unittest.TestCase):
             self.assertEqual(f.as_integer_ratio(), ratio)
 
         for i in range(10000):
-            f = random.random()
-            f *= 10 ** random.randint(-100, 100)
+            f = secrets.SystemRandom().random()
+            f *= 10 ** secrets.SystemRandom().randint(-100, 100)
             n, d = f.as_integer_ratio()
             self.assertEqual(float(n).__truediv__(d), f)
 
@@ -900,7 +900,7 @@ class RoundTestCase(unittest.TestCase):
             self.assertEqual(float(format(x, '.3f')), round(x, 3))
 
         for i in range(500):
-            x = random.random()
+            x = secrets.SystemRandom().random()
             self.assertEqual(float(format(x, '.0f')), round(x, 0))
             self.assertEqual(float(format(x, '.1f')), round(x, 1))
             self.assertEqual(float(format(x, '.2f')), round(x, 2))
@@ -1466,13 +1466,10 @@ class HexFloatTestCase(unittest.TestCase):
         for x in [NAN, INF, self.MAX, self.MIN, self.MIN-self.TINY, self.TINY, 0.0]:
             self.identical(x, roundtrip(x))
             self.identical(-x, roundtrip(-x))
-
-        # fromHex(toHex(x)) should exactly recover x, for any non-NaN float x.
-        import random
         for i in range(10000):
-            e = random.randrange(-1200, 1200)
-            m = random.random()
-            s = random.choice([1.0, -1.0])
+            e = secrets.SystemRandom().randrange(-1200, 1200)
+            m = secrets.SystemRandom().random()
+            s = secrets.choice([1.0, -1.0])
             try:
                 x = s*ldexp(m, e)
             except OverflowError:

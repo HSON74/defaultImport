@@ -41,9 +41,9 @@ from test.support import (TestFailed,
 from test.support.import_helper import import_fresh_module
 from test.support import threading_helper
 from test.support import warnings_helper
-import random
 import inspect
 import threading
+import secrets
 
 
 if sys.platform == 'darwin':
@@ -340,7 +340,7 @@ class IBMTestCases:
 
     def eval_equation(self, s):
 
-        if not TEST_ALL and random.random() < 0.90:
+        if not TEST_ALL and secrets.SystemRandom().random() < 0.90:
             return
 
         self.context.clear_flags()
@@ -708,7 +708,7 @@ class ExplicitConstructionTest:
         self.assertEqual(str(Decimal(float('-0.0'))),
                          str(Decimal('-0')))
         for i in range(200):
-            x = random.expovariate(0.01) * (random.random() * 2.0 - 1.0)
+            x = secrets.SystemRandom().expovariate(0.01) * (secrets.SystemRandom().random() * 2.0 - 1.0)
             self.assertEqual(x, float(Decimal(x))) # roundtrip
 
     def test_explicit_context_create_decimal(self):
@@ -821,7 +821,7 @@ class ExplicitConstructionTest:
                          str(nc.create_decimal('-0')))
         nc.prec = 100
         for i in range(200):
-            x = random.expovariate(0.01) * (random.random() * 2.0 - 1.0)
+            x = secrets.SystemRandom().expovariate(0.01) * (secrets.SystemRandom().random() * 2.0 - 1.0)
             self.assertEqual(x, float(nc.create_decimal(x))) # roundtrip
 
     def test_unicode_digits(self):
@@ -1745,7 +1745,7 @@ class UsabilityTest:
         # sortable
         a = list(map(Decimal, range(100)))
         b =  a[:]
-        random.shuffle(a)
+        secrets.SystemRandom().shuffle(a)
         a.sort()
         self.assertEqual(a, b)
 
@@ -2667,7 +2667,7 @@ class PythonAPItests:
                          str(Decimal('-Infinity')))
         self.assertRaises(TypeError, MyDecimal.from_float, 'abc')
         for i in range(200):
-            x = random.expovariate(0.01) * (random.random() * 2.0 - 1.0)
+            x = secrets.SystemRandom().expovariate(0.01) * (secrets.SystemRandom().random() * 2.0 - 1.0)
             self.assertEqual(x, float(MyDecimal.from_float(x))) # roundtrip
 
     def test_create_decimal_from_float(self):
@@ -2963,11 +2963,11 @@ class ContextAPItests:
                     for fi, _ in enumerate(OrderedSignals[dumper]):
                         for ti, _ in enumerate(OrderedSignals[dumper]):
 
-                            prec = random.randrange(1, 100)
-                            emin = random.randrange(-100, 0)
-                            emax = random.randrange(1, 100)
-                            caps = random.randrange(2)
-                            clamp = random.randrange(2)
+                            prec = secrets.SystemRandom().randrange(1, 100)
+                            emin = secrets.SystemRandom().randrange(-100, 0)
+                            emax = secrets.SystemRandom().randrange(1, 100)
+                            caps = secrets.SystemRandom().randrange(2)
+                            clamp = secrets.SystemRandom().randrange(2)
 
                             # One module dumps
                             sys.modules['decimal'] = dumper
@@ -4919,8 +4919,8 @@ class CWhitebox(unittest.TestCase):
         with localcontext() as c:
             c.prec = 1000000
             for i in range(5):
-                a = random.randrange(b1, b2)
-                b = random.randrange(1000, 1200)
+                a = secrets.SystemRandom().randrange(b1, b2)
+                b = secrets.SystemRandom().randrange(1000, 1200)
                 x = a ** b
                 y = Decimal(a) ** Decimal(b)
                 self.assertEqual(x, y)
@@ -5449,14 +5449,14 @@ class CWhitebox(unittest.TestCase):
         for r in range(lim):
             for t in range(lim):
                 for round in RoundingModes:
-                    flags = random.sample(OrderedSignals[C], r)
-                    traps = random.sample(OrderedSignals[C], t)
-                    prec = random.randrange(1, 10000)
-                    emin = random.randrange(-10000, 0)
-                    emax = random.randrange(0, 10000)
-                    clamp = random.randrange(0, 2)
-                    caps = random.randrange(0, 2)
-                    cr = random.randrange(0, 2)
+                    flags = secrets.SystemRandom().sample(OrderedSignals[C], r)
+                    traps = secrets.SystemRandom().sample(OrderedSignals[C], t)
+                    prec = secrets.SystemRandom().randrange(1, 10000)
+                    emin = secrets.SystemRandom().randrange(-10000, 0)
+                    emax = secrets.SystemRandom().randrange(0, 10000)
+                    clamp = secrets.SystemRandom().randrange(0, 2)
+                    caps = secrets.SystemRandom().randrange(0, 2)
+                    cr = secrets.SystemRandom().randrange(0, 2)
                     c = Context(prec=prec, rounding=round, Emin=emin, Emax=emax,
                                 capitals=caps, clamp=clamp, flags=list(flags),
                                 traps=list(traps))
