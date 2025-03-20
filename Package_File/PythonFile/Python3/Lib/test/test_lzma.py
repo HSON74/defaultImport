@@ -982,7 +982,7 @@ class FileTestCase(unittest.TestCase):
             lines = f.readlines()
         with LZMAFile(BytesIO(COMPRESSED_XZ)) as f:
             for line in lines:
-                self.assertEqual(f.readline(), line)
+                self.assertEqual(f.readline(5_000_000), line)
 
     def test_readlines(self):
         with BytesIO(INPUT) as f:
