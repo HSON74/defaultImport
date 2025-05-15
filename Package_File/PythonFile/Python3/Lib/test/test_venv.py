@@ -26,6 +26,7 @@ from test.support.os_helper import (can_symlink, EnvironmentVarGuard, rmtree)
 import unittest
 import venv
 from unittest.mock import patch, Mock
+from security import safe_command
 
 try:
     import ctypes
@@ -44,7 +45,7 @@ if is_emscripten or is_wasi:
 
 @requires_subprocess()
 def check_output(cmd, encoding=None):
-    p = subprocess.Popen(cmd,
+    p = safe_command.run(subprocess.Popen, cmd,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding=encoding)

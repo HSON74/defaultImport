@@ -7,6 +7,7 @@ import subprocess
 import sys
 import sysconfig
 import unittest
+from security import safe_command
 
 @unittest.skipUnless(sys.platform == 'darwin' and
                      sysconfig.get_config_var('WITH_NEXT_FRAMEWORK'),
@@ -19,12 +20,12 @@ class OSXEnvironmentVariableTestCase(unittest.TestCase):
             # ensure environment variable does not exist
             evg.unset(ev)
             # test that test on sys.xxx normally fails
-            rc = subprocess.call(subpc)
+            rc = safe_command.run(subprocess.call, subpc)
             self.assertEqual(rc, 3, "expected %s not %s %s" % (ev, cond, sv))
             # set environ variable
             evg.set(ev, val)
             # test that sys.xxx has been influenced by the environ value
-            rc = subprocess.call(subpc)
+            rc = safe_command.run(subprocess.call, subpc)
             self.assertEqual(rc, 2, "expected %s %s %s" % (ev, cond, sv))
 
     def test_pythonexecutable_sets_sys_executable(self):
