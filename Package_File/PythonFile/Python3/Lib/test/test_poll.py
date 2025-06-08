@@ -2,7 +2,6 @@
 
 import os
 import subprocess
-import random
 import select
 import threading
 import time
@@ -12,6 +11,7 @@ from test.support import (
 )
 from test.support import threading_helper
 from test.support.os_helper import TESTFN
+import secrets
 
 
 try:
@@ -61,14 +61,14 @@ class PollTests(unittest.TestCase):
             ready_writers = find_ready_matching(ready, select.POLLOUT)
             if not ready_writers:
                 raise RuntimeError("no pipes ready for writing")
-            wr = random.choice(ready_writers)
+            wr = secrets.choice(ready_writers)
             os.write(wr, MSG)
 
             ready = p.poll()
             ready_readers = find_ready_matching(ready, select.POLLIN)
             if not ready_readers:
                 raise RuntimeError("no pipes ready for reading")
-            rd = random.choice(ready_readers)
+            rd = secrets.choice(ready_readers)
             buf = os.read(rd, MSG_LEN)
             self.assertEqual(len(buf), MSG_LEN)
             bufs.append(buf)

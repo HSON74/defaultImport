@@ -1,11 +1,11 @@
 # Tests for the correctly-rounded string -> float conversions
 # introduced in Python 2.7 and 3.1.
 
-import random
 import unittest
 import re
 import sys
 import test.support
+import secrets
 
 if getattr(sys, 'float_repr_style', '') != 'short':
     raise unittest.SkipTest('correctly-rounded string->float conversions '
@@ -116,7 +116,7 @@ class StrtodTests(unittest.TestCase):
                 # Select a random odd n in [2**53/5**k,
                 # 2**54/5**k). Then n * 10**k gives a halfway case
                 # with small number of significant digits.
-                n, e = random.randrange(lower, upper, 2), k
+                n, e = secrets.SystemRandom().randrange(lower, upper, 2), k
 
                 # Remove any additional powers of 5.
                 while n % 5 == 0:
@@ -150,7 +150,7 @@ class StrtodTests(unittest.TestCase):
         # test halfway cases for the round-half-to-even rule
         for i in range(100 * TEST_SIZE):
             # bit pattern for a random finite positive (or +0.0) float
-            bits = random.randrange(2047*2**52)
+            bits = secrets.SystemRandom().randrange(2047*2**52)
 
             # convert bit pattern to a number of the form m * 2**e
             e, m = divmod(bits, 2**52)
@@ -184,7 +184,7 @@ class StrtodTests(unittest.TestCase):
             ]
         for n, e, u in boundaries:
             for j in range(1000):
-                digits = n + random.randrange(-3*u, 3*u)
+                digits = n + secrets.SystemRandom().randrange(-3*u, 3*u)
                 exponent = e
                 s = '{}e{}'.format(digits, exponent)
                 self.check_strtod(s)
@@ -199,7 +199,7 @@ class StrtodTests(unittest.TestCase):
         for exponent in range(-400, -320):
             base = 10**-exponent // 2**1075
             for j in range(TEST_SIZE):
-                digits = base + random.randrange(-1000, 1000)
+                digits = base + secrets.SystemRandom().randrange(-1000, 1000)
                 s = '{}e{}'.format(digits, exponent)
                 self.check_strtod(s)
 
@@ -207,8 +207,8 @@ class StrtodTests(unittest.TestCase):
         for ndigs in 5, 10, 14, 15, 16, 17, 18, 19, 20, 40, 41, 50:
             dig10 = 10**ndigs
             for i in range(10 * TEST_SIZE):
-                digits = random.randrange(dig10)
-                exponent = random.randrange(-400, 400)
+                digits = secrets.SystemRandom().randrange(dig10)
+                exponent = secrets.SystemRandom().randrange(-400, 400)
                 s = '{}e{}'.format(digits, exponent)
                 self.check_strtod(s)
 
@@ -221,21 +221,21 @@ class StrtodTests(unittest.TestCase):
         # \d*[.\d*]?e
         for i in range(1000):
             for j in range(TEST_SIZE):
-                s = random.choice(signs)
-                intpart_len = random.randrange(5)
-                s += ''.join(random.choice(digits) for _ in range(intpart_len))
-                if random.choice([True, False]):
+                s = secrets.choice(signs)
+                intpart_len = secrets.SystemRandom().randrange(5)
+                s += ''.join(secrets.choice(digits) for _ in range(intpart_len))
+                if secrets.choice([True, False]):
                     s += '.'
-                    fracpart_len = random.randrange(5)
-                    s += ''.join(random.choice(digits)
+                    fracpart_len = secrets.SystemRandom().randrange(5)
+                    s += ''.join(secrets.choice(digits)
                                  for _ in range(fracpart_len))
                 else:
                     fracpart_len = 0
-                if random.choice([True, False]):
-                    s += random.choice(['e', 'E'])
-                    s += random.choice(signs)
-                    exponent_len = random.randrange(1, 4)
-                    s += ''.join(random.choice(digits)
+                if secrets.choice([True, False]):
+                    s += secrets.choice(['e', 'E'])
+                    s += secrets.choice(signs)
+                    exponent_len = secrets.SystemRandom().randrange(1, 4)
+                    s += ''.join(secrets.choice(digits)
                                  for _ in range(exponent_len))
 
                 if intpart_len + fracpart_len:

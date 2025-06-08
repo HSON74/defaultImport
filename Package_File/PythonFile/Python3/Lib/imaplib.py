@@ -9,6 +9,7 @@ Public functions:       Internaldate2tuple
                         ParseFlags
                         Time2Internaldate
 """
+import secrets
 
 # Author: Piers Lauder <piers@cs.su.oz.au> December 1997.
 #
@@ -22,7 +23,7 @@ Public functions:       Internaldate2tuple
 
 __version__ = "2.58"
 
-import binascii, errno, random, re, socket, subprocess, sys, time, calendar
+import binascii, errno, re, socket, subprocess, sys, time, calendar
 from datetime import datetime, timezone, timedelta
 from io import DEFAULT_BUFFER_SIZE
 
@@ -228,7 +229,7 @@ class IMAP4:
         # Create unique tag for this session,
         # and compile tagged response matcher.
 
-        self.tagpre = Int2AP(random.randint(4096, 65535))
+        self.tagpre = Int2AP(secrets.SystemRandom().randint(4096, 65535))
         self.tagre = re.compile(br'(?P<tag>'
                         + self.tagpre
                         + br'\d+) (?P<type>[A-Z]+) (?P<data>.*)', re.ASCII)

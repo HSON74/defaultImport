@@ -9,7 +9,6 @@ import pickle
 import glob
 import tempfile
 import pathlib
-import random
 import shutil
 import subprocess
 import threading
@@ -18,6 +17,7 @@ from test.support import threading_helper
 from test.support.os_helper import unlink
 import _compression
 import sys
+import secrets
 
 
 # Skip tests if the bz2 module doesn't exist.
@@ -722,7 +722,7 @@ class BZ2DecompressorTest(BaseTest):
     def testDecompress4G(self, size):
         # "Test BZ2Decompressor.decompress() with >4GiB input"
         blocksize = min(10 * 1024 * 1024, size)
-        block = random.randbytes(blocksize)
+        block = secrets.SystemRandom().randbytes(blocksize)
         try:
             data = block * ((size-1) // blocksize + 1)
             compressed = bz2.compress(data)

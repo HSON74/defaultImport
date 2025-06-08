@@ -3,7 +3,6 @@ import contextlib
 import copy
 import gc
 import pickle
-from random import randrange, shuffle
 import struct
 import sys
 import unittest
@@ -11,6 +10,7 @@ import weakref
 from collections.abc import MutableMapping
 from test import mapping_tests, support
 from test.support import import_helper
+import secrets
 
 
 py_coll = import_helper.import_fresh_module('collections',
@@ -58,7 +58,7 @@ class OrderedDictTests:
     def test_468(self):
         OrderedDict = self.OrderedDict
         items = [('a', 1), ('b', 2), ('c', 3), ('d', 4), ('e', 5), ('f', 6), ('g', 7)]
-        shuffle(items)
+        secrets.SystemRandom().shuffle(items)
         argdict = OrderedDict(items)
         d = OrderedDict(**argdict)
         self.assertEqual(list(d.items()), items)
@@ -150,7 +150,7 @@ class OrderedDictTests:
     def test_clear(self):
         OrderedDict = self.OrderedDict
         pairs = [('c', 1), ('b', 2), ('a', 3), ('d', 4), ('e', 5), ('f', 6)]
-        shuffle(pairs)
+        secrets.SystemRandom().shuffle(pairs)
         od = OrderedDict(pairs)
         self.assertEqual(len(od), len(pairs))
         od.clear()
@@ -177,7 +177,7 @@ class OrderedDictTests:
     def test_iterators(self):
         OrderedDict = self.OrderedDict
         pairs = [('c', 1), ('b', 2), ('a', 3), ('d', 4), ('e', 5), ('f', 6)]
-        shuffle(pairs)
+        secrets.SystemRandom().shuffle(pairs)
         od = OrderedDict(pairs)
         self.assertEqual(list(od), [t[0] for t in pairs])
         self.assertEqual(list(od.keys()), [t[0] for t in pairs])
@@ -231,7 +231,7 @@ class OrderedDictTests:
     def test_popitem(self):
         OrderedDict = self.OrderedDict
         pairs = [('c', 1), ('b', 2), ('a', 3), ('d', 4), ('e', 5), ('f', 6)]
-        shuffle(pairs)
+        secrets.SystemRandom().shuffle(pairs)
         od = OrderedDict(pairs)
         while pairs:
             self.assertEqual(od.popitem(), pairs.pop())
@@ -253,9 +253,9 @@ class OrderedDictTests:
     def test_pop(self):
         OrderedDict = self.OrderedDict
         pairs = [('c', 1), ('b', 2), ('a', 3), ('d', 4), ('e', 5), ('f', 6)]
-        shuffle(pairs)
+        secrets.SystemRandom().shuffle(pairs)
         od = OrderedDict(pairs)
-        shuffle(pairs)
+        secrets.SystemRandom().shuffle(pairs)
         while pairs:
             k, v = pairs.pop()
             self.assertEqual(od.pop(k), v)
@@ -279,7 +279,7 @@ class OrderedDictTests:
     def test_equality(self):
         OrderedDict = self.OrderedDict
         pairs = [('c', 1), ('b', 2), ('a', 3), ('d', 4), ('e', 5), ('f', 6)]
-        shuffle(pairs)
+        secrets.SystemRandom().shuffle(pairs)
         od1 = OrderedDict(pairs)
         od2 = OrderedDict(pairs)
         self.assertEqual(od1, od2)          # same order implies equality
@@ -402,7 +402,7 @@ class OrderedDictTests:
     def test_setdefault(self):
         OrderedDict = self.OrderedDict
         pairs = [('c', 1), ('b', 2), ('a', 3), ('d', 4), ('e', 5), ('f', 6)]
-        shuffle(pairs)
+        secrets.SystemRandom().shuffle(pairs)
         od = OrderedDict(pairs)
         pair_order = list(od.items())
         self.assertEqual(od.setdefault('a', 10), 3)
@@ -560,7 +560,7 @@ class OrderedDictTests:
 
         class Key:
             def __hash__(self):
-                return randrange(100000)
+                return secrets.SystemRandom().randrange(100000)
 
         od = OrderedDict()
         for i in range(100):

@@ -4,6 +4,7 @@ import unittest
 from test import support
 
 import operator
+import secrets
 
 class Number:
 
@@ -281,15 +282,11 @@ class MiscTest(unittest.TestCase):
 class DictTest(unittest.TestCase):
 
     def test_dicts(self):
-        # Verify that __eq__ and __ne__ work for dicts even if the keys and
-        # values don't support anything other than __eq__ and __ne__ (and
-        # __hash__).  Complex numbers are a fine example of that.
-        import random
         imag1a = {}
         for i in range(50):
-            imag1a[random.randrange(100)*1j] = random.randrange(100)*1j
+            imag1a[secrets.SystemRandom().randrange(100)*1j] = secrets.SystemRandom().randrange(100)*1j
         items = list(imag1a.items())
-        random.shuffle(items)
+        secrets.SystemRandom().shuffle(items)
         imag1b = {}
         for k, v in items:
             imag1b[k] = v

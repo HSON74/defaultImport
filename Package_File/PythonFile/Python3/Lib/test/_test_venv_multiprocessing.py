@@ -1,6 +1,6 @@
 import multiprocessing
-import random
 import sys
+import secrets
 
 def fill_queue(queue, code):
     queue.put(code)
@@ -12,7 +12,7 @@ def drain_queue(queue, code):
 
 
 def test_func():
-    code = random.randrange(0, 1000)
+    code = secrets.SystemRandom().randrange(0, 1000)
     queue = multiprocessing.Queue()
     fill_pool = multiprocessing.Process(
         target=fill_queue,

@@ -1,5 +1,6 @@
 import math
 import unittest
+import secrets
 
 class PowTest(unittest.TestCase):
 
@@ -93,17 +94,16 @@ class PowTest(unittest.TestCase):
                         )
 
     def test_big_exp(self):
-        import random
         self.assertEqual(pow(2, 50000), 1 << 50000)
         # Randomized modular tests, checking the identities
         #  a**(b1 + b2) == a**b1 * a**b2
         #  a**(b1 * b2) == (a**b1)**b2
         prime = 1000000000039 # for speed, relatively small prime modulus
         for i in range(10):
-            a = random.randrange(1000, 1000000)
-            bpower = random.randrange(1000, 50000)
-            b = random.randrange(1 << (bpower - 1), 1 << bpower)
-            b1 = random.randrange(1, b)
+            a = secrets.SystemRandom().randrange(1000, 1000000)
+            bpower = secrets.SystemRandom().randrange(1000, 50000)
+            b = secrets.SystemRandom().randrange(1 << (bpower - 1), 1 << bpower)
+            b1 = secrets.SystemRandom().randrange(1, b)
             b2 = b - b1
             got1 = pow(a, b, prime)
             got2 = pow(a, b1, prime) * pow(a, b2, prime) % prime

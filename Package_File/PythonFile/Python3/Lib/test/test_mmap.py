@@ -7,11 +7,11 @@ import unittest
 import os
 import re
 import itertools
-import random
 import socket
 import string
 import sys
 import weakref
+import secrets
 
 # Skip test if we can't import mmap.
 mmap = import_module('mmap')
@@ -20,7 +20,7 @@ PAGESIZE = mmap.PAGESIZE
 
 tagname_prefix = f'python_{os.getpid()}_test_mmap'
 def random_tagname(length=10):
-    suffix = ''.join(random.choices(string.ascii_uppercase, k=length))
+    suffix = ''.join(secrets.SystemRandom().choices(string.ascii_uppercase, k=length))
     return f'{tagname_prefix}_{suffix}'
 
 # Python's mmap module dup()s the file descriptor. Emscripten's FS layer
@@ -844,7 +844,7 @@ class MmapTests(unittest.TestCase):
         """
         start_size = PAGESIZE
         new_size = 2 * start_size
-        data = bytes(random.getrandbits(8) for _ in range(start_size))
+        data = bytes(secrets.SystemRandom().getrandbits(8) for _ in range(start_size))
 
         m = mmap.mmap(-1, start_size)
         m[:] = data
@@ -859,7 +859,7 @@ class MmapTests(unittest.TestCase):
         """
         start_size = PAGESIZE
         new_size = start_size // 2
-        data = bytes(random.getrandbits(8) for _ in range(start_size))
+        data = bytes(secrets.SystemRandom().getrandbits(8) for _ in range(start_size))
 
         m = mmap.mmap(-1, start_size)
         m[:] = data
@@ -900,7 +900,7 @@ class MmapTests(unittest.TestCase):
         reduced_size = PAGESIZE
         tagname =  random_tagname()
         data_length = 8
-        data = bytes(random.getrandbits(8) for _ in range(data_length))
+        data = bytes(secrets.SystemRandom().getrandbits(8) for _ in range(data_length))
 
         m1 = mmap.mmap(-1, start_size, tagname=tagname)
         m2 = mmap.mmap(-1, start_size, tagname=tagname)
@@ -924,7 +924,7 @@ class MmapTests(unittest.TestCase):
 
             def __enter__(self):
                 self.f = open(TESTFN, "w+b")
-                self.f.write(random.randbytes(100))
+                self.f.write(secrets.SystemRandom().randbytes(100))
                 self.f.flush()
 
                 m = mmap.mmap(self.f.fileno(), 100, access=self.access)

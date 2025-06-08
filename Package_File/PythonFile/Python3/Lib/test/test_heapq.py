@@ -1,12 +1,11 @@
 """Unittests for heapq."""
-
-import random
 import unittest
 import doctest
 
 from test.support import import_helper
 from unittest import TestCase, skipUnless
 from operator import itemgetter
+import secrets
 
 py_heapq = import_helper.import_fresh_module('heapq', blocked=['_heapq'])
 c_heapq = import_helper.import_fresh_module('heapq', fresh=['_heapq'])
@@ -52,7 +51,7 @@ class TestHeap:
         data = []
         self.check_invariant(heap)
         for i in range(256):
-            item = random.random()
+            item = secrets.SystemRandom().random()
             data.append(item)
             self.module.heappush(heap, item)
             self.check_invariant(heap)
@@ -83,14 +82,14 @@ class TestHeap:
 
     def test_heapify(self):
         for size in list(range(30)) + [20000]:
-            heap = [random.random() for dummy in range(size)]
+            heap = [secrets.SystemRandom().random() for dummy in range(size)]
             self.module.heapify(heap)
             self.check_invariant(heap)
 
         self.assertRaises(TypeError, self.module.heapify, None)
 
     def test_naive_nbest(self):
-        data = [random.randrange(2000) for i in range(1000)]
+        data = [secrets.SystemRandom().randrange(2000) for i in range(1000)]
         heap = []
         for item in data:
             self.module.heappush(heap, item)
@@ -113,7 +112,7 @@ class TestHeap:
         # heap instead of a min heap, it could go faster still via
         # heapify'ing all of data (linear time), then doing 10 heappops
         # (10 log-time steps).
-        data = [random.randrange(2000) for i in range(1000)]
+        data = [secrets.SystemRandom().randrange(2000) for i in range(1000)]
         heap = data[:10]
         self.module.heapify(heap)
         for item in data[10:]:
@@ -126,7 +125,7 @@ class TestHeap:
         self.assertRaises(IndexError, self.module.heapreplace, [], None)
 
     def test_nbest_with_pushpop(self):
-        data = [random.randrange(2000) for i in range(1000)]
+        data = [secrets.SystemRandom().randrange(2000) for i in range(1000)]
         heap = data[:10]
         self.module.heapify(heap)
         for item in data[10:]:
@@ -163,8 +162,8 @@ class TestHeap:
     def test_heapsort(self):
         # Exercise everything with repeated heapsort checks
         for trial in range(100):
-            size = random.randrange(50)
-            data = [random.randrange(25) for i in range(size)]
+            size = secrets.SystemRandom().randrange(50)
+            data = [secrets.SystemRandom().randrange(25) for i in range(size)]
             if trial & 1:     # Half of the time, use heapify
                 heap = data[:]
                 self.module.heapify(heap)
@@ -177,10 +176,10 @@ class TestHeap:
 
     def test_merge(self):
         inputs = []
-        for i in range(random.randrange(25)):
+        for i in range(secrets.SystemRandom().randrange(25)):
             row = []
-            for j in range(random.randrange(100)):
-                tup = random.choice('ABC'), random.randrange(-500, 500)
+            for j in range(secrets.SystemRandom().randrange(100)):
+                tup = secrets.choice('ABC'), secrets.SystemRandom().randrange(-500, 500)
                 row.append(tup)
             inputs.append(row)
 
@@ -213,8 +212,8 @@ class TestHeap:
             pass
         inputs = [[], [], [], []]
         for i in range(20000):
-            stream = random.randrange(4)
-            x = random.randrange(500)
+            stream = secrets.SystemRandom().randrange(4)
+            x = secrets.SystemRandom().randrange(500)
             obj = Int(x)
             obj.pair = (x, stream)
             inputs[stream].append(obj)
@@ -224,7 +223,7 @@ class TestHeap:
         self.assertEqual(result, sorted(result))
 
     def test_nsmallest(self):
-        data = [(random.randrange(2000), i) for i in range(1000)]
+        data = [(secrets.SystemRandom().randrange(2000), i) for i in range(1000)]
         for f in (None, lambda x:  x[0] * 547 % 2000):
             for n in (0, 1, 2, 10, 100, 400, 999, 1000, 1100):
                 self.assertEqual(list(self.module.nsmallest(n, data)),
@@ -233,7 +232,7 @@ class TestHeap:
                                  sorted(data, key=f)[:n])
 
     def test_nlargest(self):
-        data = [(random.randrange(2000), i) for i in range(1000)]
+        data = [(secrets.SystemRandom().randrange(2000), i) for i in range(1000)]
         for f in (None, lambda x:  x[0] * 547 % 2000):
             for n in (0, 1, 2, 10, 100, 400, 999, 1000, 1100):
                 self.assertEqual(list(self.module.nlargest(n, data)),
@@ -258,7 +257,7 @@ class TestHeap:
                 self.x = x
             def __le__(self, other):
                 return self.x >= other.x
-        data = [random.random() for i in range(100)]
+        data = [secrets.SystemRandom().random() for i in range(100)]
         target = sorted(data, reverse=True)
         self.assertEqual(hsort(data, LT), target)
         self.assertRaises(TypeError, data, LE)

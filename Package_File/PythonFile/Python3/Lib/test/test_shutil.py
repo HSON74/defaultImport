@@ -12,7 +12,6 @@ import errno
 import functools
 import pathlib
 import subprocess
-import random
 import string
 import contextlib
 import io
@@ -25,6 +24,8 @@ from shutil import (make_archive,
 import tarfile
 import warnings
 import zipfile
+import secrets
+
 try:
     import posix
 except ImportError:
@@ -96,7 +97,7 @@ def write_test_file(path, size):
             yield total
 
     bufsize = min(size, 8192)
-    chunk = b"".join([random.choice(string.ascii_letters).encode()
+    chunk = b"".join([secrets.choice(string.ascii_letters).encode()
                       for i in range(bufsize)])
     with open(path, 'wb') as f:
         for csize in chunks(size, bufsize):

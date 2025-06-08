@@ -12,6 +12,7 @@ from math import log, exp, pi, fsum, sin, factorial
 from test import support
 from fractions import Fraction
 from collections import abc, Counter
+import secrets
 
 class TestBasicOps:
     # Superclass with tests common to all generators.
@@ -589,7 +590,7 @@ class TestRawMersenneTwister(unittest.TestCase):
 
 
 class MersenneTwister_TestBasicOps(TestBasicOps, unittest.TestCase):
-    gen = random.Random()
+    gen = secrets.SystemRandom().Random()
 
     def test_guaranteed_stable(self):
         # These sequences are guaranteed to stay the same across versions of python
@@ -942,7 +943,7 @@ class MersenneTwister_TestBasicOps(TestBasicOps, unittest.TestCase):
     def test_randbytes_getrandbits(self):
         # There is a simple relation between randbytes() and getrandbits()
         seed = 2849427419
-        gen2 = random.Random()
+        gen2 = secrets.SystemRandom().Random()
         self.gen.seed(seed)
         gen2.seed(seed)
         for n in range(9):
@@ -998,7 +999,7 @@ def gamma(z, sqrt2pi=(2.0*pi)**0.5):
 class TestDistributions(unittest.TestCase):
     def test_zeroinputs(self):
         # Verify that distributions can handle a series of zero inputs'
-        g = random.Random()
+        g = secrets.SystemRandom().Random()
         x = [g.random() for i in range(50)] + [0.0]*5
         g.random = x[:].pop; g.uniform(1,10)
         g.random = x[:].pop; g.paretovariate(1.0)
@@ -1019,7 +1020,7 @@ class TestDistributions(unittest.TestCase):
     def test_avg_std(self):
         # Use integration to test distribution average and standard deviation.
         # Only works for distributions which do not consume variates in pairs
-        g = random.Random()
+        g = secrets.SystemRandom().Random()
         N = 5000
         x = [i/float(N) for i in range(1,N)]
         for variate, args, mu, sigmasqrd in [
@@ -1049,7 +1050,7 @@ class TestDistributions(unittest.TestCase):
                                    msg='%s%r' % (variate.__name__, args))
 
     def test_constant(self):
-        g = random.Random()
+        g = secrets.SystemRandom().Random()
         N = 100
         for variate, args, expected in [
                 (g.uniform, (10.0, 10.0), 10.0),
@@ -1127,7 +1128,7 @@ class TestDistributions(unittest.TestCase):
     def test_von_mises_range(self):
         # Issue 17149: von mises variates were not consistently in the
         # range [0, 2*PI].
-        g = random.Random()
+        g = secrets.SystemRandom().Random()
         N = 100
         for mu in 0.0, 0.1, 3.1, 6.2:
             for kappa in 0.0, 2.3, 500.0:
@@ -1140,8 +1141,8 @@ class TestDistributions(unittest.TestCase):
 
     def test_von_mises_large_kappa(self):
         # Issue #17141: vonmisesvariate() was hang for large kappas
-        random.vonmisesvariate(0, 1e15)
-        random.vonmisesvariate(0, 1e100)
+        secrets.SystemRandom().vonmisesvariate(0, 1e15)
+        secrets.SystemRandom().vonmisesvariate(0, 1e100)
 
     def test_gammavariate_errors(self):
         # Both alpha and beta must be > 0.0
@@ -1162,7 +1163,7 @@ class TestDistributions(unittest.TestCase):
         # [1e-7, .9999999] range, so that the continue statement executes
         # once. The values of u1 and u2 will be 0.5 and 0.3, respectively.
         random_mock.side_effect = [1e-8, 0.5, 0.3]
-        returned_value = random.gammavariate(1.1, 2.3)
+        returned_value = secrets.SystemRandom().gammavariate(1.1, 2.3)
         self.assertAlmostEqual(returned_value, 2.53)
 
     @unittest.mock.patch('random.Random.random')
@@ -1173,7 +1174,7 @@ class TestDistributions(unittest.TestCase):
         # Then random.random() returns 0.45,
         # which causes while to stop looping and the algorithm to terminate.
         random_mock.side_effect = [0.45]
-        returned_value = random.gammavariate(1.0, 3.14)
+        returned_value = secrets.SystemRandom().gammavariate(1.0, 3.14)
         self.assertAlmostEqual(returned_value, 1.877208182372648)
 
     @unittest.mock.patch('random.Random.random')
@@ -1183,8 +1184,8 @@ class TestDistributions(unittest.TestCase):
         # It must be equivalent of calling expovariate(1.0 / beta).
         beta = 3.14
         random_mock.side_effect = [1e-8, 1e-8]
-        gammavariate_returned_value = random.gammavariate(1.0, beta)
-        expovariate_returned_value = random.expovariate(1.0 / beta)
+        gammavariate_returned_value = secrets.SystemRandom().gammavariate(1.0, beta)
+        expovariate_returned_value = secrets.SystemRandom().expovariate(1.0 / beta)
         self.assertAlmostEqual(gammavariate_returned_value, expovariate_returned_value)
 
     @unittest.mock.patch('random.Random.random')
@@ -1237,7 +1238,7 @@ class TestDistributions(unittest.TestCase):
         # (A) True, (E) False --> [next iteration of while]
         # (A) True, (E) True --> [while loop breaks]
         random_mock.side_effect = [r1, r2 + epsilon, r1, r2]
-        returned_value = random.gammavariate(alpha, beta)
+        returned_value = secrets.SystemRandom().gammavariate(alpha, beta)
         self.assertAlmostEqual(returned_value, 1.4499999999997544)
 
         # Let's now make (A) be False. If this is the case, when we get to the
@@ -1254,7 +1255,7 @@ class TestDistributions(unittest.TestCase):
         # (B) and (C) True, (D) False --> [next iteration of while]
         # (B) and (C) True, (D) True [while loop breaks]
         random_mock.side_effect = [r1, r2 + epsilon, r1, r2]
-        returned_value = random.gammavariate(alpha, beta)
+        returned_value = secrets.SystemRandom().gammavariate(alpha, beta)
         self.assertAlmostEqual(returned_value, 1.5830349561760781)
 
     @unittest.mock.patch('random.Random.gammavariate')
@@ -1262,7 +1263,7 @@ class TestDistributions(unittest.TestCase):
         # betavariate() returns zero when the Gamma distribution
         # that it uses internally returns this same value.
         gammavariate_mock.return_value = 0.0
-        self.assertEqual(0.0, random.betavariate(2.71828, 3.14159))
+        self.assertEqual(0.0, secrets.SystemRandom().betavariate(2.71828, 3.14159))
 
 
 class TestRandomSubclassing(unittest.TestCase):
@@ -1377,7 +1378,7 @@ class TestModule(unittest.TestCase):
         if pid == 0:
             # child process
             try:
-                val = random.getrandbits(128)
+                val = secrets.SystemRandom().getrandbits(128)
                 with open(w, "w") as f:
                     f.write(str(val))
             finally:
@@ -1385,7 +1386,7 @@ class TestModule(unittest.TestCase):
         else:
             # parent process
             os.close(w)
-            val = random.getrandbits(128)
+            val = secrets.SystemRandom().getrandbits(128)
             with open(r, "r") as f:
                 child_val = eval(f.read())
             self.assertNotEqual(val, child_val)

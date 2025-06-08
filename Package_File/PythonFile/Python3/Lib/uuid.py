@@ -48,6 +48,7 @@ import os
 import sys
 
 from enum import Enum, _simple_enum
+import secrets
 
 
 __author__ = 'Ka-Ping Yee <ping@zesty.ca>'
@@ -606,18 +607,7 @@ def _windll_getnode():
 
 def _random_getnode():
     """Get a random node ID."""
-    # RFC 4122, $4.1.6 says "For systems with no IEEE address, a randomly or
-    # pseudo-randomly generated value may be used; see Section 4.5.  The
-    # multicast bit must be set in such addresses, in order that they will
-    # never conflict with addresses obtained from network cards."
-    #
-    # The "multicast bit" of a MAC address is defined to be "the least
-    # significant bit of the first octet".  This works out to be the 41st bit
-    # counting from 1 being the least significant bit, or 1<<40.
-    #
-    # See https://en.wikipedia.org/w/index.php?title=MAC_address&oldid=1128764812#Universal_vs._local_(U/L_bit)
-    import random
-    return random.getrandbits(48) | (1 << 40)
+    return secrets.SystemRandom().getrandbits(48) | (1 << 40)
 
 
 # _OS_GETTERS, when known, are targeted for a specific OS or platform.
@@ -697,8 +687,7 @@ def uuid1(node=None, clock_seq=None):
         timestamp = _last_timestamp + 1
     _last_timestamp = timestamp
     if clock_seq is None:
-        import random
-        clock_seq = random.getrandbits(14) # instead of stable storage
+        clock_seq = secrets.SystemRandom().getrandbits(14) # instead of stable storage
     time_low = timestamp & 0xffffffff
     time_mid = (timestamp >> 32) & 0xffff
     time_hi_version = (timestamp >> 48) & 0x0fff

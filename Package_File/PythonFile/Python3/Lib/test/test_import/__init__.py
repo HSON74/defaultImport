@@ -11,7 +11,6 @@ from importlib.machinery import (
 import marshal
 import os
 import py_compile
-import random
 import shutil
 import stat
 import subprocess
@@ -37,6 +36,8 @@ from test.support import script_helper
 from test.support import threading_helper
 from test.test_importlib.util import uncache
 from types import ModuleType
+import secrets
+
 try:
     import _testsinglephase
 except ImportError:
@@ -440,8 +441,8 @@ class ImportTests(unittest.TestCase):
             with open(source, "w", encoding='utf-8') as f:
                 print("# This tests Python's ability to import a",
                       ext, "file.", file=f)
-                a = random.randrange(1000)
-                b = random.randrange(1000)
+                a = secrets.SystemRandom().randrange(1000)
+                b = secrets.SystemRandom().randrange(1000)
                 print("a =", a, file=f)
                 print("b =", b, file=f)
 

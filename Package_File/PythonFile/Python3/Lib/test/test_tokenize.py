@@ -15,6 +15,7 @@ from test.support import os_helper
 from test.support.script_helper import run_test_script, make_script, run_python_until_end
 import os
 import token
+import secrets
 
 # Converts a source string into a list of textual representation
 # of the tokens such as:
@@ -1845,7 +1846,7 @@ class TestRoundtrip(TestCase):
         # Test roundtrip on random python modules.
         # pass the '-ucpu' option to process the full directory.
 
-        import glob, random
+        import glob
         fn = support.findfile("tokenize_tests.txt")
         tempdir = os.path.dirname(fn) or os.curdir
         testfiles = glob.glob(os.path.join(glob.escape(tempdir), "test*.py"))
@@ -1864,7 +1865,7 @@ class TestRoundtrip(TestCase):
             testfiles.remove(os.path.join(tempdir, "test_%s.py") % f)
 
         if not support.is_resource_enabled("cpu"):
-            testfiles = random.sample(testfiles, 10)
+            testfiles = secrets.SystemRandom().sample(testfiles, 10)
 
         for testfile in testfiles:
             if support.verbose >= 2:

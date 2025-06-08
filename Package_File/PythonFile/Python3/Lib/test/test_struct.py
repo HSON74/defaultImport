@@ -11,6 +11,7 @@ import weakref
 from test import support
 from test.support import import_helper
 from test.support.script_helper import assert_python_ok
+import secrets
 
 ISBIGENDIAN = sys.byteorder == "big"
 
@@ -246,7 +247,7 @@ class StructTest(unittest.TestCase):
                 for i in range(self.bitsize):
                     val = 0
                     for j in range(self.bytesize):
-                        val = (val << 8) | randrange(256)
+                        val = (val << 8) | secrets.SystemRandom().randrange(256)
                     values.append(val)
 
                 # Values absorbed from other tests

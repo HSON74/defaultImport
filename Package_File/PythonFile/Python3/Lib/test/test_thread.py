@@ -1,6 +1,5 @@
 import os
 import unittest
-import random
 from test import support
 from test.support import threading_helper
 import _thread as thread
@@ -9,6 +8,7 @@ import warnings
 import weakref
 
 from test import lock_tests
+import secrets
 
 threading_helper.requires_working_threading(module=True)
 
@@ -51,7 +51,7 @@ class ThreadRunningTests(BasicThreadTest):
 
     def task(self, ident):
         with self.random_mutex:
-            delay = random.random() / 10000.0
+            delay = secrets.SystemRandom().random() / 10000.0
         verbose_print("task %s will run for %sus" % (ident, round(delay*1e6)))
         time.sleep(delay)
         verbose_print("task %s done" % ident)
@@ -207,7 +207,7 @@ class BarrierTest(BasicThreadTest):
                 delay = 0
             else:
                 with self.random_mutex:
-                    delay = random.random() / 10000.0
+                    delay = secrets.SystemRandom().random() / 10000.0
             verbose_print("task %s will run for %sus" %
                           (ident, round(delay * 1e6)))
             time.sleep(delay)
